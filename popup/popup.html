@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 设置文档编码和视口 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 页面标题 -->
+    <title>EasyPassword - 密码生成器</title>
+    <!-- 引入外部样式表 -->
+    <link rel="stylesheet" href="popup.css">
+    <!-- 引入popup脚本 -->
+    <script src="/popup/popup.js"></script>
+</head>
+<body>
+    <!-- 主容器：包含所有UI组件 -->
+    <div class="container">
+        <!-- 标题区域：显示应用名称和描述 -->
+        <header class="header">
+            <div class="title-container">
+                <h1>EasyPassword</h1>
+                <span class="version">v1.0.0</span>
+            </div>
+            <p>安全且易记的密码生成器</p>
+        </header>
+
+        <!-- 密码显示区域：展示生成的密码和操作按钮 -->
+        <div class="password-display">
+            <!-- 密码输入组：包含密码显示框和刷新按钮 -->
+            <div class="password-input-group">
+                <!-- 只读输入框：显示生成的密码 -->
+                <input type="text" id="passwordOutput" readonly>
+                <!-- 刷新按钮：点击生成新密码 -->
+                <button id="refreshButton" class="icon-button" title="刷新密码">
+                    <img src="../assets/icons/icon01.svg" alt="刷新" class="refresh-icon">
+                </button>
+            </div>
+            <!-- 复制按钮：点击复制密码到剪贴板 -->
+            <button id="copyButton" title="复制密码">复制</button>
+        </div>
+
+        <!-- 密码选项配置区域：用于自定义密码生成规则 -->
+        <div class="password-options">
+            <!-- 密码类型选择：选择密码生成方式 -->
+            <div class="option-group">
+                <label>类型</label>
+                <div class="select-wrapper">
+                    <!-- 下拉选择框：切换密码生成类型 -->
+                    <select id="passwordType">
+                        <option value="random">随机乱序</option>
+                        <option value="memorable">单词组合</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 密码长度控制：调整密码的字符长度 -->
+            <div class="option-group">
+                <div class="option-header">
+                    <label>长度</label>
+                </div>
+                <!-- 滑动条包装器：包含滑动条和数值显示 -->
+                <div class="slider-wrapper">
+                    <!-- 范围滑动条：用于调整密码长度(8-20位) -->
+                    <input type="range" id="passwordLength" min="8" max="20" value="12">
+                    <!-- 长度数值显示 -->
+                    <span id="lengthValue">12</span>
+                </div>
+            </div>
+
+            <!-- 字符类型控制：选择密码中包含的字符类型 -->
+            <!-- 数字开关组 -->
+            <div class="option-group">
+                <div class="switch-group">
+                    <div class="switch-item">
+                        <span class="switch-label">数字</span>
+                        <!-- 数字切换开关：控制是否包含数字 -->
+                        <label class="switch">
+                            <input type="checkbox" id="includeNumbers" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- 符号开关组 -->
+            <div class="option-group">
+                <div class="switch-group">
+                    <div class="switch-item">
+                        <span class="switch-label">符号</span>
+                        <!-- 符号切换开关：控制是否包含特殊符号 -->
+                        <label class="switch">
+                            <input type="checkbox" id="includeSymbols">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>                
+            </div>
+            <!-- 安全提示信息 -->
+            <div id="securityWarning" style="display: none; color: #fc0000; font-size: 12px; margin-top: 8px; text-align: center;">
+                为保证密码安全性，需至少使用3类字符！
+            </div>
+        </div>
+    </div>
+</body>
+</html>

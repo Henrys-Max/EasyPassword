@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "EasyPassword",
+  "version": "1.0.0",
+  "description": "一个简单易用的密码生成器，帮助用户生成安全且易记的密码",
+  "icons": {
+    "16": "assets/icons/password16.png",
+    "48": "assets/icons/password48.png",
+    "128": "assets/icons/password128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "assets/icons/password16.png",
+      "48": "assets/icons/password48.png",
+      "128": "assets/icons/password128.png"
+    },
+    "default_title": "EasyPassword",
+    "default_popup": "popup/popup.html"
+  },
+  "permissions": [
+    "clipboardWrite",
+    "storage"
+  ],
+  "web_accessible_resources": [{
+    "resources": ["lib/*.js"],
+    "matches": ["<all_urls>"]
+  }],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}

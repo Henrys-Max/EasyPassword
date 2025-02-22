@@ -1,0 +1,317 @@
+/* 全局样式重置：移除默认边距和设置盒模型 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 基础样式设置：定义全局字体、颜色和背景 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+/* 主容器样式：设置弹出窗口的基本尺寸和阴影效果 */
+.container {
+    width: 320px;
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 标题区域样式：应用标题和描述文本的布局 */
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 主标题样式：设置字体大小和颜色 */
+.title-container {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.version {
+    color: #999;
+    font-size: 12px;
+    margin-left: 8px;
+}
+
+/* 副标题样式：设置描述文本的颜色和大小 */
+.header p {
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+/* 密码显示区域样式：包含密码输入框和按钮的容器 */
+.password-display {
+    margin-bottom: 20px;
+}
+
+/* 密码输入组样式：使用flex布局组织密码显示和刷新按钮 */
+.password-input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+#passwordOutput {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px;
+    font-size: 16px;
+    font-family: monospace;
+    outline: none;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.refresh-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.3s ease;
+}
+
+.icon-button:hover .refresh-icon {
+    opacity: 1;
+}
+
+.refresh-icon.rotate {
+    transform: rotate(360deg);
+}
+
+#copyButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff5e00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+#copyButton:hover {
+    background-color: #ff5e00;
+}
+
+/* 密码选项配置区域样式：包含所有密码生成选项的容器 */
+.password-options {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.option-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    height: 25px;
+}
+
+.option-group label {
+    min-width: 40px;
+}
+
+.select-wrapper {
+    max-width: 100px;
+    flex: 1;
+}
+
+.slider-wrapper {
+    flex: 1;
+    max-width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.option-group:last-child {
+    margin-bottom: 0;
+}
+
+/* 长度控制组件样式 */
+.option-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.slider-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#lengthValue {
+    min-width: 24px;
+    text-align: right;
+    color: #666;
+}
+
+input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: #ddd;
+    border-radius: 2px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #ff5e00;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #ff5e00;
+}
+
+/* 开关组件样式 */
+.switch-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.switch-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.switch-label {
+    color: #666;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ddd;
+    transition: .3s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+input:checked + .slider {
+    background-color: #ff5e00;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* 密码选项配置区域样式：包含所有密码生成选项的容器 */
+.password-options {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.option-group {
+    margin-bottom: 15px;
+}
+
+.option-group:last-child {
+    margin-bottom: 0;
+}
+
+/* 下拉菜单样式 */
+select {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* 滑动条样式 */
+input[type="range"] {
+    width: 100%;
+    margin: 8px 0;
+}
+
+/* 复选框组样式 */
+.checkboxes {
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+input[type="checkbox"] {
+    margin-right: 4px;
+}
