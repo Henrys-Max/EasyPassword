@@ -2,8 +2,7 @@
   "manifest_version": 3,
   "name": "EasyPassword",
   "version": "1.0.0",
-  "short_description": "告别简单密码和遗忘困扰，一键生成兼顾安全与易记的可靠密码。",
-  "description": "EasyPassword是一款专为Chrome浏览器设计的密码管理工具，通过智能算法平衡安全性与易用性。提供随机乱码和可拼读短语两种生成模式，自动规避易混淆字符与高风险组合，支持8-25位长度自由调节。采用银行级加密技术，确保生成的密码符合国际安全标准，满足个人日常使用、家庭共享及企业级账户防护需求，操作体验流畅无门槛。",
+  "description": "告别简单密码和遗忘困扰，一键生成兼顾安全与易记的可靠密码。",
   "icons": {
     "16": "assets/icons/password16.png",
     "48": "assets/icons/password48.png",
