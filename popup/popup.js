@@ -29,13 +29,75 @@ let passwordGenerator;
 let passwordOutput, copyButton, refreshButton, passwordType, passwordLength;
 let lengthValue, includeNumbers, includeSymbols;
 
-// 加载密码生成器核心模块
-const scriptElement = document.createElement('script');
-scriptElement.src = '/lib/password.js';
-scriptElement.onload = () => {
-    passwordGenerator = window.passwordGenerator;
+// 密码强度指示器元素
+let strengthBar, strengthLabel;
+
+// 密码诊断面板元素
+let diagnosisPanel, advantagesList, risksList, suggestionsList;
+
+// 加载依赖模块
+const loadScripts = () => {
+    return new Promise((resolve, reject) => {
+        const loadScript = (src) => {
+            return new Promise((resolveScript, rejectScript) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolveScript;
+                script.onerror = (error) => {
+                    console.error(`加载模块失败: ${src}`, error);
+                    rejectScript(new Error(`加载模块失败: ${src}`));
+                };
+                document.head.appendChild(script);
+            });
+        };
+
+        // 按顺序加载所有依赖，确保charset.js和utils.js先加载
+        Promise.resolve()
+            .then(() => loadScript('/lib/shared/charset.js'))
+            .then(() => {
+                if (typeof self.CHARSET === 'undefined') {
+                    throw new Error('字符集模块加载失败');
+                }
+                return loadScript('/lib/shared/utils.js');
+            })
+            .then(() => {
+                if (typeof getSecureRandom === 'undefined') {
+                    throw new Error('工具函数模块加载失败');
+                }
+                return loadScript('/lib/shared/strength.js');
+            })
+            .then(() => loadScript('/lib/password.js'))
+            .then(() => {
+                // 验证所有必需的模块是否已加载
+                if (typeof window.passwordGenerator === 'undefined') {
+                    throw new Error('密码生成器核心模块加载失败');
+                }
+                if (typeof PasswordStrength === 'undefined') {
+                    throw new Error('密码强度评估模块加载失败');
+                }
+
+                // 初始化全局变量
+                passwordGenerator = window.passwordGenerator;
+                console.log('所有依赖模块加载成功');
+                resolve();
+            })
+            .catch(reject);
+    });
 };
-document.head.appendChild(scriptElement);
+
+// 确保所有依赖加载完成后再初始化
+loadScripts().then(() => {
+    console.log('所有依赖模块加载完成');
+    // 在依赖加载完成后，直接加载配置
+    if (passwordOutput) {
+        loadSavedConfig();
+    }
+}).catch(error => {
+    console.error('依赖模块加载失败:', error);
+    if (passwordOutput) {
+        passwordOutput.value = '依赖模块加载失败：' + error.message;
+    }
+});
 
 // 确保在页面加载完成后再初始化
 document.addEventListener('DOMContentLoaded', () => {
@@ -60,9 +122,19 @@ document.addEventListener('DOMContentLoaded', () => {
         includeNumbers = document.getElementById('includeNumbers');
         includeSymbols = document.getElementById('includeSymbols');
 
+        // 初始化密码强度相关元素
+        strengthBar = document.getElementById('strengthBar');
+        strengthLabel = document.getElementById('strengthLabel');
+        diagnosisPanel = document.getElementById('diagnosisPanel');
+        advantagesList = document.getElementById('advantagesList');
+        risksList = document.getElementById('risksList');
+        suggestionsList = document.getElementById('suggestionsList');
+
         // 验证所有必需的DOM元素
         if (!copyButton || !refreshButton || !passwordType || !passwordLength || 
-            !lengthValue || !includeNumbers || !includeSymbols) {
+            !lengthValue || !includeNumbers || !includeSymbols || !strengthBar || 
+            !strengthLabel || !diagnosisPanel || !advantagesList || !risksList || 
+            !suggestionsList) {
             throw new Error('部分必需的DOM元素未找到');
         }
 
@@ -70,10 +142,55 @@ document.addEventListener('DOMContentLoaded', () => {
         passwordOutput.value = '正在设置事件监听器...';
         
         // 添加密码生成成功事件监听器
+        // 密码生成成功事件监听器
         window.addEventListener('passwordGenerated', (event) => {
             console.log('密码生成成功');
             if (event.detail && event.detail.password) {
-                passwordOutput.value = event.detail.password;
+                const password = event.detail.password;
+                passwordOutput.value = password;
+                
+                // 检查PasswordStrength类是否可用
+                if (typeof PasswordStrength === 'undefined') {
+                    console.error('密码强度评估模块未就绪');
+                    return;
+                }
+                
+                try {
+                    // 评估密码强度
+                    const options = {
+                        includeNumbers: includeNumbers.checked,
+                        includeSymbols: includeSymbols.checked
+                    };
+                    const strengthResult = PasswordStrength.evaluateStrength(password, options);
+                    
+                    // 更新强度指示器
+                    strengthBar.style.width = `${strengthResult.score}%`;
+                    strengthBar.style.backgroundColor = strengthResult.level.color;
+                    
+                    // 更新强度标签，分别显示等级和熵值
+                    const levelSpan = strengthLabel.querySelector('.level');
+                    const entropySpan = strengthLabel.querySelector('.entropy');
+                    levelSpan.textContent = `${strengthResult.level.label}`;
+                    entropySpan.textContent = `${strengthResult.score}%`;
+                    
+                    // 更新诊断面板
+                    updateDiagnosisPanel(strengthResult);
+                    
+                    // 如果参数变化导致强度骤降，添加抖动效果
+                    if (strengthResult.score < 40) {
+                        strengthBar.style.animation = 'shake 0.2s ease-in-out';
+                        setTimeout(() => {
+                            strengthBar.style.animation = '';
+                        }, 200);
+                    }
+                } catch (error) {
+                    console.error('密码强度评估失败:', error);
+                    // 设置默认的强度显示
+                    strengthBar.style.width = '0%';
+                    strengthBar.style.backgroundColor = '#ccc';
+                    strengthLabel.querySelector('.level').textContent = '评估失败';
+                    strengthLabel.querySelector('.entropy').textContent = '';
+                }
             } else {
                 console.error('密码生成事件缺少必要的数据');
                 passwordOutput.value = '密码生成失败：无效的密码数据';
@@ -90,14 +207,54 @@ document.addEventListener('DOMContentLoaded', () => {
         passwordOutput.value = '正在等待密码生成器初始化...';
         
         // 等待密码生成器初始化完成后再加载配置
-        const checkPasswordGenerator = () => {
-            if (passwordGenerator) {
+        const checkDependencies = () => {
+            if (passwordGenerator && window.PasswordStrength) {
                 loadSavedConfig();
             } else {
-                setTimeout(checkPasswordGenerator, 100);
+                setTimeout(checkDependencies, 100);
             }
         };
-        checkPasswordGenerator();
+        checkDependencies();
+
+        // 更新诊断面板的辅助函数
+        function updateDiagnosisPanel(strengthResult) {
+            // 清空现有内容
+            advantagesList.innerHTML = '';
+            risksList.innerHTML = '';
+            suggestionsList.innerHTML = '';
+
+            // 添加优势项
+            strengthResult.diagnosis.advantages.forEach(advantage => {
+                const li = document.createElement('li');
+                li.textContent = advantage;
+                advantagesList.appendChild(li);
+            });
+
+            // 添加风险项
+            strengthResult.diagnosis.risks.forEach(risk => {
+                const li = document.createElement('li');
+                li.textContent = risk;
+                risksList.appendChild(li);
+            });
+
+            // 添加优化建议
+            strengthResult.suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.textContent = suggestion;
+                suggestionsList.appendChild(li);
+            });
+
+            // 根据是否有内容显示或隐藏相应区域
+            advantagesList.parentElement.style.display = 
+                strengthResult.diagnosis.advantages.length ? 'block' : 'none';
+            risksList.parentElement.style.display = 
+                strengthResult.diagnosis.risks.length ? 'block' : 'none';
+            suggestionsList.parentElement.style.display = 
+                strengthResult.suggestions.length ? 'block' : 'none';
+
+            // 显示诊断面板
+            diagnosisPanel.classList.add('show');
+        }
     } catch (error) {
         console.error('初始化失败:', error);
         if (passwordOutput) {
@@ -166,6 +323,13 @@ function generatePassword() {
         if (passwordOutput) {
             passwordOutput.value = '密码生成器初始化失败：必需的DOM元素未找到';
         }
+        return;
+    }
+
+    // 检查密码生成器是否已初始化
+    if (!passwordGenerator || typeof passwordGenerator.generateRandomPassword !== 'function') {
+        console.error('密码生成器未就绪');
+        passwordOutput.value = '密码生成器未就绪，请稍后再试...';
         return;
     }
 
@@ -258,6 +422,11 @@ function initializeEventListeners() {
 
     // 刷新按钮点击事件
     refreshButton.addEventListener('click', generatePassword);
+
+    // 密码强度指示器点击事件
+    strengthBar.parentElement.addEventListener('click', () => {
+        diagnosisPanel.classList.toggle('show');
+    });
 
     // 密码类型变更事件
     passwordType.addEventListener('change', () => {

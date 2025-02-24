@@ -97,6 +97,139 @@ body {
     transition: opacity 0.2s, transform 0.3s ease;
 }
 
+/* 密码强度指示器样式 */
+.strength-meter {
+    margin: 8px 0;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    height: 8px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.strength-meter:hover {
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0;
+    transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.strength-bar.very-weak { background-color: #ff4444; }
+.strength-bar.medium { background-color: #ffd700; }
+.strength-bar.strong { background-color: #7CFC00; }
+.strength-bar.very-strong { background-color: #006400; }
+
+.strength-label {
+    text-align: center;
+    margin: 4px 0;
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.strength-label .level,
+.strength-label .entropy {
+    display: inline-block;
+}
+
+/* 密码诊断面板样式 */
+.diagnosis-panel {
+    display: none;
+    margin: 8px 0;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, margin 0.3s ease-in-out;
+}
+
+.diagnosis-panel.show {
+    display: block;
+    max-height: 500px;
+    opacity: 1;
+    margin: 8px 0;
+}
+
+.diagnosis-section {
+    margin-bottom: 12px;
+}
+
+.diagnosis-section h3 {
+    font-size: 12px;
+    margin-bottom: 8px;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.diagnosis-section ul {
+    list-style: none;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.diagnosis-section li {
+    font-size: 10px;
+    color: #6c757d;
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.diagnosis-section .icon {
+    font-size: 12px;
+}
+.diagnosis-section:last-child {
+    margin-bottom: 0;
+}
+
+.diagnosis-section h3 {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.diagnosis-section ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.diagnosis-section li {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+    position: relative;
+}
+
+.diagnosis-section li:before {
+    content: "•";
+    position: absolute;
+    left: -12px;
+    color: #999;
+}
+
+.advantages li:before {
+    color: #4CAF50;
+}
+
+.risks li:before {
+    color: #f44336;
+}
+
+.suggestions li:before {
+    color: #2196F3;
+}
+
 .icon-button:hover .refresh-icon {
     opacity: 1;
 }
