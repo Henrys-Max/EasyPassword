@@ -289,10 +289,7 @@ function generatePassword() {
             passwordOutput.value = password;
             
             // 评估密码强度并更新UI
-            const strengthResult = PasswordStrength.evaluateStrength(password, {
-                includeNumbers: includeNumbers.checked,
-                includeSymbols: includeSymbols.checked
-            });
+            const strengthResult = PasswordStrength.evaluateStrength(password);
             
             // 更新强度指示器
             const segments = strengthBar.querySelectorAll('.strength-segment');
@@ -369,6 +366,9 @@ function generatePassword() {
     }
 }
 
+// 定时器变量
+let copyButtonTimer;
+
 // 复制密码到剪贴板
 async function copyPassword() {
     const password = passwordOutput.value;
@@ -383,17 +383,33 @@ async function copyPassword() {
     try {
         await navigator.clipboard.writeText(password);
         const originalText = copyButton.textContent;
+        
+        // 清除之前的定时器
+        if (copyButtonTimer) {
+            clearTimeout(copyButtonTimer);
+        }
+        
         copyButton.textContent = '已复制！';
         copyButton.classList.add('success');
-        setTimeout(() => {
+        
+        // 保存新的定时器引用
+        copyButtonTimer = setTimeout(() => {
             copyButton.textContent = originalText;
             copyButton.classList.remove('success');
         }, 1000);
     } catch (err) {
         console.error('复制失败:', err);
+        
+        // 清除之前的定时器
+        if (copyButtonTimer) {
+            clearTimeout(copyButtonTimer);
+        }
+        
         copyButton.textContent = '复制失败';
         copyButton.classList.add('error');
-        setTimeout(() => {
+        
+        // 保存新的定时器引用
+        copyButtonTimer = setTimeout(() => {
             copyButton.textContent = '复制';
             copyButton.classList.remove('error');
         }, 1000);
