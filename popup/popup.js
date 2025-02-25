@@ -33,7 +33,7 @@ let lengthValue, includeNumbers, includeSymbols;
 let strengthBar, strengthLabel;
 
 // 密码诊断面板元素
-let diagnosisPanel, advantagesList, risksList, suggestionsList;
+let diagnosisPanel, suggestionsList;
 
 // 加载依赖模块
 const loadScripts = () => {
@@ -88,10 +88,10 @@ const loadScripts = () => {
 // 确保所有依赖加载完成后再初始化
 loadScripts().then(() => {
     console.log('所有依赖模块加载完成');
-    // 在依赖加载完成后，直接加载配置
-    if (passwordOutput) {
-        loadSavedConfig();
-    }
+    // 移除这里的配置加载，统一在DOMContentLoaded中处理
+    // if (passwordOutput) {
+    //     loadSavedConfig();
+    // }
 }).catch(error => {
     console.error('依赖模块加载失败:', error);
     if (passwordOutput) {
@@ -123,82 +123,20 @@ document.addEventListener('DOMContentLoaded', () => {
         includeSymbols = document.getElementById('includeSymbols');
 
         // 初始化密码强度相关元素
-        strengthBar = document.getElementById('strengthBar');
+        strengthBar = document.querySelector('.strength-segments');
         strengthLabel = document.getElementById('strengthLabel');
         diagnosisPanel = document.getElementById('diagnosisPanel');
-        advantagesList = document.getElementById('advantagesList');
-        risksList = document.getElementById('risksList');
         suggestionsList = document.getElementById('suggestionsList');
 
         // 验证所有必需的DOM元素
         if (!copyButton || !refreshButton || !passwordType || !passwordLength || 
             !lengthValue || !includeNumbers || !includeSymbols || !strengthBar || 
-            !strengthLabel || !diagnosisPanel || !advantagesList || !risksList || 
-            !suggestionsList) {
+            !strengthLabel || !diagnosisPanel || !suggestionsList) {
             throw new Error('部分必需的DOM元素未找到');
         }
 
         // 更新状态
         passwordOutput.value = '正在设置事件监听器...';
-        
-        // 添加密码生成成功事件监听器
-        // 密码生成成功事件监听器
-        window.addEventListener('passwordGenerated', (event) => {
-            console.log('密码生成成功');
-            if (event.detail && event.detail.password) {
-                const password = event.detail.password;
-                passwordOutput.value = password;
-                
-                // 检查PasswordStrength类是否可用
-                if (typeof PasswordStrength === 'undefined') {
-                    console.error('密码强度评估模块未就绪');
-                    return;
-                }
-                
-                try {
-                    // 评估密码强度
-                    const options = {
-                        includeNumbers: includeNumbers.checked,
-                        includeSymbols: includeSymbols.checked
-                    };
-                    const strengthResult = PasswordStrength.evaluateStrength(password, options);
-                    
-                    // 更新强度指示器
-                    strengthBar.style.width = `${strengthResult.score}%`;
-                    strengthBar.style.backgroundColor = strengthResult.level.color;
-                    
-                    // 更新强度标签，分别显示等级和熵值
-                    const levelSpan = strengthLabel.querySelector('.level');
-                    const entropySpan = strengthLabel.querySelector('.entropy');
-                    levelSpan.textContent = `${strengthResult.level.label}`;
-                    entropySpan.textContent = `${strengthResult.score}%`;
-                    
-                    // 更新诊断面板
-                    updateDiagnosisPanel(strengthResult);
-                    
-                    // 如果参数变化导致强度骤降，添加抖动效果
-                    if (strengthResult.score < 40) {
-                        strengthBar.style.animation = 'shake 0.2s ease-in-out';
-                        setTimeout(() => {
-                            strengthBar.style.animation = '';
-                        }, 200);
-                    }
-                } catch (error) {
-                    console.error('密码强度评估失败:', error);
-                    // 设置默认的强度显示
-                    strengthBar.style.width = '0%';
-                    strengthBar.style.backgroundColor = '#ccc';
-                    strengthLabel.querySelector('.level').textContent = '评估失败';
-                    strengthLabel.querySelector('.entropy').textContent = '';
-                }
-            } else {
-                console.error('密码生成事件缺少必要的数据');
-                passwordOutput.value = '密码生成失败：无效的密码数据';
-            }
-        });
-
-        // 更新状态
-        passwordOutput.value = '正在初始化事件监听器...';
         
         // 初始化事件监听器
         initializeEventListeners();
@@ -216,45 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         checkDependencies();
 
-        // 更新诊断面板的辅助函数
-        function updateDiagnosisPanel(strengthResult) {
-            // 清空现有内容
-            advantagesList.innerHTML = '';
-            risksList.innerHTML = '';
-            suggestionsList.innerHTML = '';
-
-            // 添加优势项
-            strengthResult.diagnosis.advantages.forEach(advantage => {
-                const li = document.createElement('li');
-                li.textContent = advantage;
-                advantagesList.appendChild(li);
-            });
-
-            // 添加风险项
-            strengthResult.diagnosis.risks.forEach(risk => {
-                const li = document.createElement('li');
-                li.textContent = risk;
-                risksList.appendChild(li);
-            });
-
-            // 添加优化建议
-            strengthResult.suggestions.forEach(suggestion => {
-                const li = document.createElement('li');
-                li.textContent = suggestion;
-                suggestionsList.appendChild(li);
-            });
-
-            // 根据是否有内容显示或隐藏相应区域
-            advantagesList.parentElement.style.display = 
-                strengthResult.diagnosis.advantages.length ? 'block' : 'none';
-            risksList.parentElement.style.display = 
-                strengthResult.diagnosis.risks.length ? 'block' : 'none';
-            suggestionsList.parentElement.style.display = 
-                strengthResult.suggestions.length ? 'block' : 'none';
-
-            // 显示诊断面板
-            diagnosisPanel.classList.add('show');
-        }
     } catch (error) {
         console.error('初始化失败:', error);
         if (passwordOutput) {
@@ -268,29 +167,36 @@ function loadSavedConfig() {
     // 更新状态提示
     passwordOutput.value = '正在加载配置...';
     try {
-        chrome.storage.sync.get({
-        passwordType: 'random',
-        passwordLength: 12,
-        includeNumbers: true,
-        includeSymbols: false
-    }, (config) => {
-        try {
-            // 更新UI元素的值
-            passwordType.value = config.passwordType;
-            passwordLength.value = config.passwordLength;
-            lengthValue.textContent = config.passwordLength;
-            includeNumbers.checked = config.includeNumbers;
-            includeSymbols.checked = config.includeSymbols;
-
-            // 更新状态提示
-            passwordOutput.value = '配置加载完成，准备生成密码...';
-            // 根据加载的配置生成密码
-            generatePassword();
-        } catch (error) {
-            console.error('配置应用失败:', error);
-            passwordOutput.value = '配置应用失败：' + error.message;
+        // 检查所有必需的依赖是否已加载
+        if (!window.passwordGenerator || !window.PasswordStrength) {
+            console.warn('等待依赖模块加载完成...');
+            setTimeout(loadSavedConfig, 100);
+            return;
         }
-    });
+
+        chrome.storage.sync.get({
+            passwordType: 'random',
+            passwordLength: 12,
+            includeNumbers: true,
+            includeSymbols: false
+        }, (config) => {
+            try {
+                // 更新UI元素的值
+                passwordType.value = config.passwordType;
+                passwordLength.value = config.passwordLength;
+                lengthValue.textContent = config.passwordLength;
+                includeNumbers.checked = config.includeNumbers;
+                includeSymbols.checked = config.includeSymbols;
+
+                // 更新状态提示
+                passwordOutput.value = '配置加载完成，准备生成密码...';
+                // 根据加载的配置生成密码
+                generatePassword();
+            } catch (error) {
+                console.error('配置应用失败:', error);
+                passwordOutput.value = '配置应用失败：' + error.message;
+            }
+        });
     } catch (error) {
         console.error('加载配置失败:', error);
         passwordOutput.value = '加载配置失败：' + error.message;
@@ -319,30 +225,54 @@ function generatePassword() {
 
     // 验证必需的DOM元素是否存在
     if (!passwordOutput || !passwordType || !passwordLength || !includeNumbers || !includeSymbols) {
-        console.error('必需的DOM元素未找到');
+        const error = new Error('必需的DOM元素未找到');
+        console.error(error);
         if (passwordOutput) {
-            passwordOutput.value = '密码生成器初始化失败：必需的DOM元素未找到';
+            passwordOutput.value = '初始化失败：' + error.message;
         }
         return;
     }
 
     // 检查密码生成器是否已初始化
-    if (!passwordGenerator || typeof passwordGenerator.generateRandomPassword !== 'function') {
-        console.error('密码生成器未就绪');
-        passwordOutput.value = '密码生成器未就绪，请稍后再试...';
+    if (!passwordGenerator) {
+        const error = new Error('密码生成器未初始化');
+        console.error(error);
+        passwordOutput.value = '等待初始化：' + error.message;
+        // 定期检查密码生成器是否已初始化
+        const checkGenerator = setInterval(() => {
+            if (passwordGenerator) {
+                clearInterval(checkGenerator);
+                generatePassword();
+            }
+        }, 100);
         return;
     }
 
-    passwordOutput.value = '正在生成密码...';
+    // 检查密码生成器方法是否可用
+    if (typeof passwordGenerator.generateRandomPassword !== 'function' || 
+        typeof passwordGenerator.generateMemorablePassword !== 'function') {
+        const error = new Error('密码生成器功能不完整');
+        console.error(error);
+        passwordOutput.value = '初始化错误：' + error.message;
+        return;
+    }
 
     try {
+        // 获取并验证参数
         const type = passwordType.value;
         const length = parseInt(passwordLength.value);
         const useNumbers = includeNumbers.checked;
         const useSymbols = includeSymbols.checked;
 
-        passwordOutput.value = `正在准备生成${type === 'random' ? '随机' : '易记'}密码，长度：${length}，包含数字：${useNumbers}，包含符号：${useSymbols}`;
+        // 验证参数有效性
+        if (isNaN(length) || length < 8 || length > 20) {
+            throw new Error('密码长度必须在8-20位之间');
+        }
 
+        // 更新状态提示
+        passwordOutput.value = `正在生成${type === 'random' ? '随机' : '易记'}密码...`;
+
+        // 记录生成参数
         console.log('密码生成参数:', {
             type,
             length,
@@ -350,37 +280,92 @@ function generatePassword() {
             useSymbols
         });
 
+        // 根据类型生成密码
+        console.log('开始生成密码...');
+        
+        // 添加事件监听器处理密码生成结果
+        const handlePasswordGenerated = (event) => {
+            const { password } = event.detail;
+            passwordOutput.value = password;
+            
+            // 评估密码强度并更新UI
+            const strengthResult = PasswordStrength.evaluateStrength(password, {
+                includeNumbers: includeNumbers.checked,
+                includeSymbols: includeSymbols.checked
+            });
+            
+            // 更新强度指示器
+            const segments = strengthBar.querySelectorAll('.strength-segment');
+            // 重置所有段的状态
+            segments.forEach(segment => {
+                segment.classList.remove('active');
+                segment.style.backgroundColor = '#ccc';
+            });
+            
+            // 根据密码强度评分确定激活的段数
+            const score = strengthResult.score;
+            let activeSegments = 0;
+            if (score <= 40) {
+                activeSegments = 1;
+            } else if (score <= 60) {
+                activeSegments = 2;
+            } else if (score <= 80) {
+                activeSegments = 3;
+            } else {
+                activeSegments = 4;
+            }
+
+            // 重置并激活指示器段，统一使用深绿色
+            segments.forEach((segment, index) => {
+                segment.classList.remove('active');
+                if (index < activeSegments) {
+                    segment.classList.add('active');
+                    segment.style.backgroundColor = '#006400';
+                } else {
+                    segment.style.backgroundColor = '#ccc';
+                }
+            });
+            
+            // 更新强度标签
+            strengthLabel.querySelector('.entropy').textContent = `熵值: ${Math.round(strengthResult.entropy)} bits`;
+            strengthLabel.querySelector('.level').textContent = strengthResult.level.label;
+            
+            // 更新诊断面板
+            const suggestionsList = document.getElementById('suggestionsList');
+            suggestionsList.innerHTML = strengthResult.suggestions
+                .map(suggestion => `<li>${suggestion}</li>`)
+                .join('');
+            
+            // 移除事件监听器
+            window.removeEventListener('passwordGenerated', handlePasswordGenerated);
+            window.removeEventListener('passwordError', handlePasswordError);
+        };
+
+        const handlePasswordError = (event) => {
+            const { message } = event.detail;
+            console.error('密码生成失败:', message);
+            passwordOutput.value = '生成失败：' + message;
+            // 移除事件监听器
+            window.removeEventListener('passwordGenerated', handlePasswordGenerated);
+            window.removeEventListener('passwordError', handlePasswordError);
+        };
+
+        // 添加事件监听器
+        window.addEventListener('passwordGenerated', handlePasswordGenerated);
+        window.addEventListener('passwordError', handlePasswordError);
+
+        // 调用密码生成方法
         if (type === 'random') {
-            // 生成随机乱序密码
-            try {
-                console.log('生成随机密码...');
-                passwordOutput.value = '正在生成随机密码，请稍候...';
-                passwordGenerator.generateRandomPassword(
-                    length,
-                    useNumbers,
-                    useSymbols
-                );
-            } catch (error) {
-                console.error('生成随机密码时发生错误:', error);
-                passwordOutput.value = '生成随机密码时发生错误：' + error.message;
-            }
+            console.log('开始生成随机密码...');
+            passwordGenerator.generateRandomPassword(length, useNumbers, useSymbols);
         } else {
-            // 生成易记的密码
-            try {
-                passwordOutput.value = '正在生成易记密码，请稍候...';
-                passwordGenerator.generateMemorablePassword(
-                    length,
-                    useNumbers,
-                    useSymbols
-                );
-            } catch (error) {
-                console.error('生成易记密码时发生错误:', error);
-                passwordOutput.value = '生成易记密码时发生错误：' + error.message;
-            }
+            console.log('开始生成易记密码...');
+            passwordGenerator.generateMemorablePassword(length, useNumbers, useSymbols);
         }
+
     } catch (error) {
-        console.error('生成密码时发生错误:', error);
-        passwordOutput.value = '生成密码时发生错误：' + error.message;
+        console.error('密码生成过程出错:', error);
+        passwordOutput.value = '生成失败：' + error.message;
     }
 }
 
@@ -421,12 +406,16 @@ function initializeEventListeners() {
     copyButton.addEventListener('click', copyPassword);
 
     // 刷新按钮点击事件
-    refreshButton.addEventListener('click', generatePassword);
-
-    // 密码强度指示器点击事件
-    strengthBar.parentElement.addEventListener('click', () => {
-        diagnosisPanel.classList.toggle('show');
+    refreshButton.addEventListener('click', () => {
+        const refreshIcon = refreshButton.querySelector('.refresh-icon');
+        refreshIcon.classList.add('rotate');
+        setTimeout(() => {
+            refreshIcon.classList.remove('rotate');
+        }, 500);
+        generatePassword();
     });
+
+
 
     // 密码类型变更事件
     passwordType.addEventListener('change', () => {
@@ -467,11 +456,32 @@ function initializeEventListeners() {
         saveConfig();
     });
 
-    // 安全提示信息显示控制函数
-    function showSecurityWarning(show) {
-        const warningElement = document.getElementById('securityWarning');
-        if (warningElement) {
-            warningElement.style.display = show ? 'block' : 'none';
-        }
+
+}
+// 显示或隐藏安全提示信息
+function showSecurityWarning(show) {
+    const warningElement = document.getElementById('securityWarning');
+    if (!warningElement) return;
+
+    if (show) {
+        warningElement.style.display = 'block';
+        // 使用setTimeout确保display属性生效后再添加show类
+        setTimeout(() => {
+            warningElement.classList.add('show');
+        }, 10);
+        // 5秒后自动隐藏
+        setTimeout(() => {
+            warningElement.classList.remove('show');
+            // 等待过渡动画完成后再隐藏元素
+            setTimeout(() => {
+                warningElement.style.display = 'none';
+            }, 300);
+        }, 5000);
+    } else {
+        warningElement.classList.remove('show');
+        // 等待过渡动画完成后再隐藏元素
+        setTimeout(() => {
+            warningElement.style.display = 'none';
+        }, 300);
     }
 }

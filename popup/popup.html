@@ -34,28 +34,26 @@
                     <img src="../assets/icons/icon01.svg" alt="刷新" class="refresh-icon">
                 </button>
             </div>
-            <!-- 密码强度指示器 -->
-            <div class="strength-meter" title="点击查看详细分析">
-                <div class="strength-bar" id="strengthBar"></div>
+
+            <!-- 密码强度指示器：实时显示密码强度评估结果 -->
+            <div class="strength-meter">
+                <!-- 强度指示条：通过不同颜色和段数展示密码强度 -->
+                <div class="strength-segments">
+                    <div class="strength-segment" data-level="very-weak"></div>
+                    <div class="strength-segment" data-level="medium"></div>
+                    <div class="strength-segment" data-level="strong"></div>
+                    <div class="strength-segment" data-level="very-strong"></div>
+                </div>
+                <!-- 强度标签：显示密码熵值和强度等级 -->
                 <div class="strength-label" id="strengthLabel">
-                    <span class="level"></span>
                     <span class="entropy"></span>
+                    <span class="level"></span>
                 </div>
             </div>
 
-            <!-- 密码诊断面板 -->
+            <!-- 密码诊断面板：显示密码评估结果和优化建议 -->
             <div class="diagnosis-panel" id="diagnosisPanel">
-                <!-- 优势项列表 -->
-                <div class="diagnosis-section advantages">
-                    <h3><span class="icon">✅</span> 优势项</h3>
-                    <ul id="advantagesList"></ul>
-                </div>
-                <!-- 风险项列表 -->
-                <div class="diagnosis-section risks">
-                    <h3><span class="icon">⚠️</span> 风险项</h3>
-                    <ul id="risksList"></ul>
-                </div>
-                <!-- 优化建议 -->
+                <!-- 优化建议列表 -->
                 <div class="diagnosis-section suggestions">
                     <h3><span class="icon">💡</span> 优化建议</h3>
                     <ul id="suggestionsList"></ul>
@@ -124,25 +122,6 @@
             <!-- 安全提示信息 -->
             <div id="securityWarning" style="display: none; color: #fc0000; font-size: 12px; margin-top: 8px; text-align: center;">
                 为保证密码安全性，需至少使用3类字符！
-            </div>
-
-            <!-- 密码诊断面板 -->
-            <div class="diagnosis-panel" id="diagnosisPanel">
-                <!-- 优势项列表 -->
-                <div class="diagnosis-section advantages">
-                    <h3><span class="icon">✅</span> 优势项</h3>
-                    <ul id="advantagesList"></ul>
-                </div>
-                <!-- 风险项列表 -->
-                <div class="diagnosis-section risks">
-                    <h3><span class="icon">⚠️</span> 风险项</h3>
-                    <ul id="risksList"></ul>
-                </div>
-                <!-- 优化建议 -->
-                <div class="diagnosis-section suggestions">
-                    <h3><span class="icon">💡</span> 优化建议</h3>
-                    <ul id="suggestionsList"></ul>
-                </div>
             </div>
         </div>
     </div>

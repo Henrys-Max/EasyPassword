@@ -97,32 +97,52 @@ body {
     transition: opacity 0.2s, transform 0.3s ease;
 }
 
-/* 密码强度指示器样式 */
+/* 安全提示信息样式 */
+#securityWarning {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#securityWarning.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 密码强度指示器样式：显示密码强度评估结果 */
 .strength-meter {
     margin: 8px 0;
-    background-color: #f0f0f0;
-    border-radius: 4px;
+}
+
+.strength-segments {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.strength-segment {
+    flex: 1;
     height: 8px;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: box-shadow 0.3s ease;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
-.strength-meter:hover {
-    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+.strength-segment[data-level="very-weak"].active {
+    background-color: #ff4d4d;
 }
 
-.strength-bar {
-    height: 100%;
-    width: 0;
-    transition: width 0.5s ease, background-color 0.5s ease;
+.strength-segment[data-level="medium"].active {
+    background-color: #ffa500;
 }
 
-.strength-bar.very-weak { background-color: #ff4444; }
-.strength-bar.medium { background-color: #ffd700; }
-.strength-bar.strong { background-color: #7CFC00; }
-.strength-bar.very-strong { background-color: #006400; }
+.strength-segment[data-level="strong"].active {
+    background-color: #2ecc71;
+}
+
+.strength-segment[data-level="very-strong"].active {
+    background-color: #006400;
+}
 
 .strength-label {
     text-align: center;
@@ -142,8 +162,8 @@ body {
 /* 密码诊断面板样式 */
 .diagnosis-panel {
     display: none;
-    margin: 8px 0;
-    padding: 12px;
+    margin: 4px 0;
+    padding: 8px;
     background: #f8f9fa;
     border-radius: 4px;
     border: 1px solid #e9ecef;
@@ -157,28 +177,59 @@ body {
     display: block;
     max-height: 500px;
     opacity: 1;
-    margin: 8px 0;
+    margin: 4px 0;
 }
 
 .diagnosis-section {
+    padding: 0;
+}
+
+.diagnosis-section:not(:last-child) {
     margin-bottom: 12px;
 }
 
 .diagnosis-section h3 {
-    font-size: 12px;
+    font-size: 14px;
+    color: #333;
     margin-bottom: 8px;
-    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.diagnosis-section .icon {
+    font-size: 16px;
+}
+
+.strength-details {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 13px;
+}
+
+.strength-details span {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-.diagnosis-section ul {
-    list-style: none;
-    padding-left: 20px;
+#suggestionsList {
     margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    color: #666;
 }
 
+#suggestionsList li {
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+#suggestionsList li:last-child {
+    margin-bottom: 0;
+}
 .diagnosis-section li {
     font-size: 10px;
     color: #6c757d;
@@ -235,7 +286,28 @@ body {
 }
 
 .refresh-icon.rotate {
-    transform: rotate(360deg);
+    animation: rotate360 0.5s ease;
+}
+
+@keyframes rotate360 {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#securityWarning {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, margin-top 0.3s ease-out;
+    margin-top: 0;
+}
+
+#securityWarning.show {
+    max-height: 40px;
+    margin-top: 8px;
 }
 
 #copyButton {
