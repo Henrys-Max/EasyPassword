@@ -32,8 +32,6 @@ let lengthValue, includeNumbers, includeSymbols;
 // 密码强度指示器元素
 let strengthBar, strengthLabel;
 
-// 密码诊断面板元素
-let diagnosisPanel, suggestionsList;
 
 // 加载依赖模块
 const loadScripts = () => {
@@ -125,13 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // 初始化密码强度相关元素
         strengthBar = document.querySelector('.strength-segments');
         strengthLabel = document.getElementById('strengthLabel');
-        diagnosisPanel = document.getElementById('diagnosisPanel');
-        suggestionsList = document.getElementById('suggestionsList');
 
         // 验证所有必需的DOM元素
         if (!copyButton || !refreshButton || !passwordType || !passwordLength || 
             !lengthValue || !includeNumbers || !includeSymbols || !strengthBar || 
-            !strengthLabel || !diagnosisPanel || !suggestionsList) {
+            !strengthLabel) {
             throw new Error('部分必需的DOM元素未找到');
         }
 
@@ -327,12 +323,7 @@ function generatePassword() {
             strengthLabel.querySelector('.entropy').textContent = `熵值: ${Math.round(strengthResult.entropy)} bits`;
             strengthLabel.querySelector('.level').textContent = strengthResult.level.label;
             
-            // 更新诊断面板
-            const suggestionsList = document.getElementById('suggestionsList');
-            suggestionsList.innerHTML = strengthResult.suggestions
-                .map(suggestion => `<li>${suggestion}</li>`)
-                .join('');
-            
+
             // 移除事件监听器
             window.removeEventListener('passwordGenerated', handlePasswordGenerated);
             window.removeEventListener('passwordError', handlePasswordError);
