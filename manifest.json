@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "EasyPassword",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "告别简单密码和遗忘困扰，一键生成兼顾安全与易记的可靠密码。",
   "icons": {
     "16": "assets/icons/password16.png",

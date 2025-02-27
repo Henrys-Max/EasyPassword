@@ -1,50 +1,81 @@
-/* 全局样式重置：移除默认边距和设置盒模型 */
+/* 全局样式重置：移除所有元素的默认边距和设置盒模型 */
+/* 通配符选择器，影响页面所有元素 */
 * {
+    /* 移除外边距，确保元素之间无间隙 */
     margin: 0;
+    /* 移除内边距，保持内容区域紧凑 */
     padding: 0;
+    /* 使用border-box盒模型，使元素的宽高包含padding和border */
     box-sizing: border-box;
 }
 
 /* 基础样式设置：定义全局字体、颜色和背景 */
+/* 应用于整个文档主体 */
 body {
+    /* 设置字体族，优先使用系统默认字体，确保最佳的跨平台显示效果 */
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    /* 设置基础字体大小为14像素 */
     font-size: 14px;
+    /* 设置行高为字体大小的1.5倍，提高文本可读性 */
     line-height: 1.5;
-    color: #333;
+    /* 设置文本颜色为深灰色，避免纯黑带来的视觉疲劳 */
+    color: #666;
+    /* 设置背景色为浅灰色，创造柔和的视觉效果 */
     background-color: #f5f5f5;
 }
 
 /* 主容器样式：设置弹出窗口的基本尺寸和阴影效果 */
+/* 定义弹出窗口的主要容器样式 */
 .container {
+    /* 设置固定宽度为320像素，适合作为浏览器扩展的弹出窗口 */
     width: 320px;
+    /* 设置内边距为16像素，使内容与边界保持适当距离 */
     padding: 16px;
+    /* 设置背景色为白色，形成与页面背景的对比 */
     background-color: #fff;
+    /* 添加轻微的阴影效果，提升层次感，参数依次为：水平偏移、垂直偏移、模糊半径和阴影颜色 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* 标题区域样式：应用标题和描述文本的布局 */
+/* 页面顶部的标题区域容器 */
 .header {
+    /* 文本居中对齐 */
     text-align: center;
+    /* 底部外边距20像素，与下方内容保持适当间距 */
     margin-bottom: 20px;
 }
 
 /* 主标题样式：设置字体大小和颜色 */
+/* 标题和版本号的容器 */
 .title-container {
+    /* 使用弹性布局 */
     display: flex;
+    /* 使用基线对齐，确保标题和版本号在视觉上对齐 */
     align-items: baseline;
+    /* 水平居中对齐 */
     justify-content: center;
+    /* 底部外边距8像素，与描述文本保持间距 */
     margin-bottom: 8px;
 }
 
+/* 主标题文本样式 */
 .header h1 {
+    /* 设置标题字体大小为24像素 */
     font-size: 24px;
+    /* 使用深蓝灰色作为标题颜色 */
     color: #2c3e50;
+    /* 移除标题的默认外边距 */
     margin: 0;
 }
 
+/* 版本号样式 */
 .version {
+    /* 使用浅灰色显示版本号 */
     color: #999;
+    /* 设置版本号字体大小为12像素 */
     font-size: 12px;
+    /* 左侧外边距8像素，与标题保持间距 */
     margin-left: 8px;
 }
 
@@ -55,99 +86,150 @@ body {
 }
 
 /* 密码显示区域样式：包含密码输入框和按钮的容器 */
+/* 密码显示区域样式：包含密码输入框和相关按钮的主容器 */
 .password-display {
+    /* 设置底部外边距为20像素，与下方选项区域保持适当间距 */
     margin-bottom: 20px;
 }
 
 /* 密码输入组样式：使用flex布局组织密码显示和刷新按钮 */
+/* 密码输入组样式：使用弹性布局组织密码显示框和刷新按钮 */
 .password-input-group {
+    /* 启用弹性布局 */
     display: flex;
+    /* 垂直居中对齐子元素 */
     align-items: center;
+    /* 底部外边距10像素 */
     margin-bottom: 10px;
+    /* 设置浅灰色背景 */
     background: #f8f9fa;
+    /* 添加2像素实线边框 */
     border: 2px solid #ddd;
+    /* 圆角效果 */
     border-radius: 4px;
+    /* 内部填充4像素 */
     padding: 4px;
 }
 
+/* 密码输出框样式 */
 #passwordOutput {
+    /* 弹性增长系数为1，占据剩余空间 */
     flex: 1;
+    /* 移除边框 */
     border: none;
+    /* 透明背景 */
     background: transparent;
+    /* 内边距8像素 */
     padding: 8px;
+    /* 设置字体大小为16像素 */
     font-size: 16px;
+    /* 使用等宽字体，确保密码字符对齐 */
     font-family: monospace;
+    /* 移除输入框聚焦时的轮廓 */
     outline: none;
 }
 
+/* 图标按钮基础样式：用于刷新等操作的通用按钮样式 */
 .icon-button {
-    background: none;
-    border: none;
+    width: 60px;
+    /* 移除默认背景色 */
+    background: rgba(255, 94, 0, 0.1);
+    /* 添加边框 */
+    border: 1px solid #fa9e68;
+    /* 设置内边距为8像素，确保点击区域足够大 */
     padding: 8px;
+    /* 鼠标悬停时显示手型光标 */
     cursor: pointer;
+    /* 使用弹性布局使图标居中 */
     display: flex;
+    /* 垂直居中对齐 */
     align-items: center;
+    /* 水平居中对齐 */
     justify-content: center;
-}
-
-.refresh-icon {
-    width: 20px;
-    height: 20px;
-    opacity: 0.6;
-    transition: opacity 0.2s, transform 0.3s ease;
-}
-
-/* 安全提示信息样式 */
-#securityWarning {
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-#securityWarning.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* 密码强度指示器样式：显示密码强度评估结果 */
-.strength-meter {
-    margin: 8px 0;
-}
-
-.strength-segments {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 4px;
-}
-
-.strength-segment {
-    flex: 1;
-    height: 8px;
-    background-color: #e0e0e0;
-    border-radius: 4px;
+    /* 添加椭圆形边框 */
+    border-radius: 10%;
+    /* 添加过渡效果 */
     transition: background-color 0.3s ease;
 }
 
-.strength-segment[data-level="very-weak"].active {
-    background-color: #ff4d4d;
+/* 刷新图标样式：定义刷新按钮中的图标外观 */
+.refresh-icon {
+    /* 设置图标宽度为20像素 */
+    width: 20px;
+    /* 设置图标高度为20像素 */
+    height: 20px;
+    /* 设置初始透明度为0.6，创造柔和的视觉效果 */
+    opacity: 0.6;
+    /* 添加透明度、旋转变换和颜色的过渡动画 */
+    transition: opacity 0.2s, transform 0.3s ease, filter 0.3s ease;
 }
 
-.strength-segment[data-level="medium"].active {
-    background-color: #ffa500;
+/* 刷新图标悬停时的颜色效果 */
+.icon-button:hover .refresh-icon {
+    /* 设置图标颜色为主题橙色 */
+    filter: invert(48%) sepia(90%) saturate(2299%) hue-rotate(359deg) brightness(101%) contrast(106%);
+    /* 保持完全不透明 */
+    opacity: 1;
 }
 
-.strength-segment[data-level="strong"].active {
-    background-color: #2ecc71;
+/* 安全提示信息的初始状态样式 */
+#securityWarning {
+    /* 初始状态完全透明 */
+    opacity: 0;
+    /* 初始状态向上偏移10像素 */
+    transform: translateY(-10px);
+    /* 添加透明度和位移的过渡动画 */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    /* 设置字体大小为13px */
+    font-size: 13px;
+    /* 设置文字颜色为红色 */
+    color: #ff0000;
+    /* 设置文本左右居中对齐 */
+    text-align: center;
 }
 
-.strength-segment[data-level="very-strong"].active {
-    background-color: #006400;
+/* 安全提示信息的显示状态样式 */
+#securityWarning.show {
+    /* 显示状态完全不透明 */
+    opacity: 1;
+    /* 取消位移，回到原始位置 */
+    transform: translateY(0);
+}
+
+/* 密码强度指示器容器：显示密码强度评估结果 */
+.strength-meter {
+    /* 上下外边距8像素，左右无外边距 */
+    margin: 8px 0;
+}
+
+/* 强度段落容器：使用弹性布局排列强度指示条 */
+.strength-segments {
+    /* 启用弹性布局 */
+    display: flex;
+    /* 设置段落之间的间隔为4像素 */
+    gap: 4px;
+    /* 底部外边距4像素 */
+    margin-bottom: 4px;
+}
+
+/* 单个强度段落样式 */
+.strength-segment {
+    /* 弹性增长系数为1，平均分配空间 */
+    flex: 1;
+    /* 设置高度为8像素 */
+    height: 8px;
+    /* 默认背景色为浅灰色 */
+    background-color: #e0e0e0;
+    /* 圆角效果 */
+    border-radius: 4px;
+    /* 背景色变化时的过渡动画 */
+    transition: background-color 0.3s ease;
 }
 
 .strength-label {
     text-align: center;
     margin: 4px 0;
-    font-size: 12px;
+    font-size: 12px;    
     color: #666;
     display: flex;
     justify-content: space-between;
@@ -159,20 +241,6 @@ body {
     display: inline-block;
 }
 
-/* 密码诊断面板样式 */
-.diagnosis-panel {
-    display: none;
-    margin: 4px 0;
-    padding: 8px;
-    background: #f8f9fa;
-    border-radius: 4px;
-    border: 1px solid #e9ecef;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, margin 0.3s ease-in-out;
-}
-
 .diagnosis-panel.show {
     display: block;
     max-height: 500px;
@@ -182,154 +250,223 @@ body {
 
 
 
+/* 刷新图标悬停效果：鼠标悬停时提高图标的清晰度 */
 .icon-button:hover .refresh-icon {
+    /* 悬停时图标完全不透明 */
     opacity: 1;
 }
 
+/* 刷新图标旋转动画样式：点击刷新按钮时的旋转效果 */
 .refresh-icon.rotate {
+    /* 应用旋转动画，持续0.5秒，使用ease缓动函数 */
     animation: rotate360 0.5s ease;
 }
 
+/* 定义360度旋转动画关键帧 */
 @keyframes rotate360 {
+    /* 动画起始状态：0度旋转 */
     from {
         transform: rotate(0deg);
     }
+    /* 动画结束状态：360度旋转 */
     to {
         transform: rotate(360deg);
     }
 }
 
+/* 安全提示信息的高度过渡样式 */
 #securityWarning {
+    /* 初始状态高度为0 */
     max-height: 0;
+    /* 隐藏溢出内容 */
     overflow: hidden;
+    /* 添加高度和上边距的过渡动画 */
     transition: max-height 0.3s ease-out, margin-top 0.3s ease-out;
+    /* 初始状态上边距为0 */
     margin-top: 0;
 }
 
+/* 安全提示信息显示状态的高度样式 */
 #securityWarning.show {
+    /* 显示状态最大高度为40像素 */
     max-height: 40px;
+    /* 显示状态上边距为8像素 */
     margin-top: 8px;
 }
 
-#copyButton {
+/* 复制按钮样式：定义密码复制按钮的外观和交互效果 */
+/* 按钮组样式：使用弹性布局组织刷新和复制按钮 */
+.button-group {
+    /* 按钮组样式：使用弹性布局组织按钮 */
+    /* 启用弹性布局 */
+    display: flex;
+    /* 设置子元素间距为10px */
+    gap: 10px;
+    /* 设置容器宽度为100% */
     width: 100%;
-    padding: 10px;
-    background-color: #ff5e00;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
 }
 
-#copyButton:hover {
+/* 复制按钮样式：占据剩余空间 */
+#copyButton {
+    /* 弹性增长系数为1，占据剩余空间 */
+    flex: 1;
+    /* 设置内边距 */
+    padding: 8px 16px;
+    /* 设置圆角 */
+    border-radius: 4px;
+    /* 设置统一的红色背景 */
     background-color: #ff5e00;
+    /* 设置文字颜色 */
+    color: white;
+    /* 移除边框 */
+    border: none;
+    /* 设置鼠标样式为手型 */
+    cursor: pointer;
+    /* 添加过渡效果 */
+    transition: background-color 0.3s ease;
 }
 
 /* 密码选项配置区域样式：包含所有密码生成选项的容器 */
 .password-options {
+    /* 设置浅灰色背景 */
     background-color: #f8f9fa;
+    /* 内边距15像素 */
     padding: 15px;
+    /* 圆角效果 */
     border-radius: 4px;
 }
 
+/* 选项组样式：每个密码生成选项的容器 */
 .option-group {
-    margin-bottom: 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 15px;
     height: 25px;
+    margin-bottom: 15px; /* 统一设置底部间距 */
 }
 
+/* 最后一个选项组样式 */
+.option-group:last-child {
+    margin-bottom: 0 !important; /* 使用 !important 确保优先级 */
+}
+
+/* 选项标签样式 */
 .option-group label {
+    /* 最小宽度40像素，确保标签有足够空间 */
     min-width: 40px;
 }
 
+/* 下拉选择框包装器样式 */
 .select-wrapper {
+    /* 最大宽度100像素 */
     max-width: 100px;
+    /* 弹性增长系数为1，占据剩余空间 */
     flex: 1;
 }
 
+/* 滑动条包装器样式 */
 .slider-wrapper {
+    /* 弹性增长系数为1 */
     flex: 1;
-    max-width: 200px;
+    /* 使用弹性布局 */
     display: flex;
+    /* 垂直居中对齐 */
     align-items: center;
+    /* 项目之间间距10像素 */
     gap: 10px;
 }
 
+/* 最后一个选项组移除底部外边距 */
 .option-group:last-child {
     margin-bottom: 0;
 }
 
-/* 长度控制组件样式 */
+/* 长度控制组件样式：用于调整密码长度的控制区域 */
 .option-header {
+    /* 使用弹性布局 */
     display: flex;
+    /* 垂直居中对齐 */
     align-items: center;
+    /* 底部外边距8像素 */
     margin-bottom: 8px;
 }
 
+/* 滑动条包装器样式：包含滑动条和数值显示 */
 .slider-wrapper {
+    /* 弹性增长系数为1 */
     flex: 1;
+    /* 使用弹性布局 */
     display: flex;
+    /* 垂直居中对齐 */
     align-items: center;
+    /* 项目之间间距10像素 */
     gap: 10px;
 }
 
+/* 长度数值显示样式 */
 #lengthValue {
+    /* 最小宽度24像素 */
     min-width: 24px;
+    /* 文本右对齐 */
     text-align: right;
+    /* 文本颜色为灰色 */
     color: #666;
 }
 
+/* 滑动条基础样式 */
 input[type="range"] {
+    /* 弹性增长系数为1 */
     flex: 1;
+    /* 移除WebKit默认外观 */
     -webkit-appearance: none;
+    /* 移除Mozilla默认外观 */
     -moz-appearance: none;
+    /* 移除标准默认外观 */
     appearance: none;
+    /* 设置高度为4像素 */
     height: 4px;
+    /* 背景色为浅灰色 */
     background: #ddd;
+    /* 圆角效果 */
     border-radius: 2px;
+    /* 移除轮廓 */
     outline: none;
 }
 
+/* 滑动条滑块样式（WebKit浏览器） */
 input[type="range"]::-webkit-slider-thumb {
+    /* 移除默认外观 */
     -webkit-appearance: none;
+    /* 宽度18像素 */
     width: 18px;
+    /* 高度18像素 */
     height: 18px;
+    /* 使用主题橙色 */
     background: #ff5e00;
+    /* 圆形滑块 */
     border-radius: 50%;
+    /* 鼠标悬停时显示手型光标 */
     cursor: pointer;
+    /* 背景色变化时的过渡动画 */
     transition: background .2s;
 }
 
+/* 滑动条滑块悬停效果 */
 input[type="range"]::-webkit-slider-thumb:hover {
+    /* 保持相同的背景色 */
     background: #ff5e00;
 }
 
-/* 开关组件样式 */
+/* 开关组样式：包含文本和开关按钮的容器 */
 .switch-group {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-}
-
-.switch-item {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
 }
 
-.switch-label {
-    color: #666;
-    font-size: 14px;
-    margin-right: 10px;
-}
-
+/* 开关按钮容器样式 */
 .switch {
     position: relative;
     display: inline-block;
@@ -337,12 +474,14 @@ input[type="range"]::-webkit-slider-thumb:hover {
     height: 20px;
 }
 
+/* 隐藏默认复选框 */
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
+/* 开关滑块基础样式 */
 .slider {
     position: absolute;
     cursor: pointer;
@@ -350,11 +489,12 @@ input[type="range"]::-webkit-slider-thumb:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ddd;
-    transition: .3s;
+    background-color: #ccc;
+    transition: .4s;
     border-radius: 20px;
 }
 
+/* 开关滑块圆形按钮样式 */
 .slider:before {
     position: absolute;
     content: "";
@@ -363,15 +503,16 @@ input[type="range"]::-webkit-slider-thumb:hover {
     left: 2px;
     bottom: 2px;
     background-color: white;
-    transition: .3s;
+    transition: .4s;
     border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
+/* 选中状态样式 */
 input:checked + .slider {
     background-color: #ff5e00;
 }
 
+/* 选中状态滑块位置 */
 input:checked + .slider:before {
     transform: translateX(20px);
 }
@@ -379,45 +520,64 @@ input:checked + .slider:before {
 /* 密码选项配置区域样式：包含所有密码生成选项的容器 */
 .password-options {
     background-color: #f8f9fa;
-    padding: 15px;
+    padding: 10px;
     border-radius: 4px;
 }
 
+/* 选项组样式：设置每个选项组之间的间距 */
 .option-group {
-    margin-bottom: 15px;
+    /* 设置底部外边距为10像素，创建选项组之间的垂直间距 */
+    margin-bottom: 10px;
 }
 
+/* 最后一个选项组样式：移除底部外边距 */
 .option-group:last-child {
+    /* 移除最后一个选项组的底部外边距，避免多余的空白 */
     margin-bottom: 0;
 }
 
-/* 下拉菜单样式 */
+/* 下拉菜单样式：自定义下拉选择框的外观 */
 select {
+    /* 宽度占满容器 */
     width: 100%;
-    padding: 6px;
+    /* 内边距4像素 */
+    padding: 4px;
+    /* 添加浅灰色边框 */
     border: 1px solid #ddd;
+    /* 圆角效果 */
     border-radius: 4px;
+    /* 白色背景 */
     background-color: white;
 }
 
-/* 滑动条样式 */
+/* 滑动条样式：自定义范围输入控件的外观 */
 input[type="range"] {
+    /* 宽度占满容器 */
     width: 100%;
+    /* 上下外边距8像素 */
     margin: 8px 0;
 }
 
-/* 复选框组样式 */
+/* 复选框组样式：包含多个复选框的容器 */
 .checkboxes {
+    /* 使用弹性布局 */
     display: flex;
+    /* 两端对齐 */
     justify-content: space-between;
 }
 
+/* 复选框标签样式 */
 .checkboxes label {
+    /* 使用弹性布局 */
     display: flex;
+    /* 垂直居中对齐 */
     align-items: center;
+    /* 项目之间间距4像素 */
     gap: 4px;
 }
 
+/* 复选框输入框样式 */
 input[type="checkbox"] {
+    /* 右侧外边距4像素 */
     margin-right: 4px;
 }

@@ -373,11 +373,13 @@ async function copyPassword() {
 
     try {
         await navigator.clipboard.writeText(password);
-        const originalText = copyButton.textContent;
+        const originalText = window.i18n.getTranslation('copy');
         
-        // 清除之前的定时器
+        // 清除之前的定时器并重置按钮状态
         if (copyButtonTimer) {
             clearTimeout(copyButtonTimer);
+            copyButton.textContent = originalText;
+            copyButton.classList.remove('success', 'error');
         }
         
         // 使用i18n获取当前语言的提示文本
@@ -391,10 +393,13 @@ async function copyPassword() {
         }, 1000);
     } catch (err) {
         console.error('复制失败:', err);
+        const originalText = window.i18n.getTranslation('copy');
         
-        // 清除之前的定时器
+        // 清除之前的定时器并重置按钮状态
         if (copyButtonTimer) {
             clearTimeout(copyButtonTimer);
+            copyButton.textContent = originalText;
+            copyButton.classList.remove('success', 'error');
         }
         
         // 使用i18n获取当前语言的失败提示文本
@@ -403,7 +408,7 @@ async function copyPassword() {
         
         // 保存新的定时器引用
         copyButtonTimer = setTimeout(() => {
-            copyButton.textContent = window.i18n.getTranslation('copy');
+            copyButton.textContent = originalText;
             copyButton.classList.remove('error');
         }, 1000);
     }
@@ -478,14 +483,14 @@ function showSecurityWarning(show) {
         setTimeout(() => {
             warningElement.classList.add('show');
         }, 10);
-        // 5秒后自动隐藏
+        // 2.5秒后自动隐藏
         setTimeout(() => {
             warningElement.classList.remove('show');
             // 等待过渡动画完成后再隐藏元素
             setTimeout(() => {
                 warningElement.style.display = 'none';
             }, 300);
-        }, 5000);
+        }, 2500);
     } else {
         warningElement.classList.remove('show');
         // 等待过渡动画完成后再隐藏元素
