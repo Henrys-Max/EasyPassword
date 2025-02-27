@@ -320,8 +320,8 @@ function generatePassword() {
             });
             
             // 更新强度标签
-            strengthLabel.querySelector('.entropy').textContent = `熵值: ${Math.round(strengthResult.entropy)} bits`;
-            strengthLabel.querySelector('.level').textContent = strengthResult.level.label;
+            strengthLabel.querySelector('.entropy').textContent = `${window.i18n.getTranslation('entropy')}: ${Math.round(strengthResult.entropy)} bits`;
+            strengthLabel.querySelector('.level').textContent = window.i18n.getTranslation(strengthResult.level.label);
             
 
             // 移除事件监听器
@@ -380,7 +380,8 @@ async function copyPassword() {
             clearTimeout(copyButtonTimer);
         }
         
-        copyButton.textContent = '已复制！';
+        // 使用i18n获取当前语言的提示文本
+        copyButton.textContent = window.i18n.getTranslation('copied');
         copyButton.classList.add('success');
         
         // 保存新的定时器引用
@@ -396,12 +397,13 @@ async function copyPassword() {
             clearTimeout(copyButtonTimer);
         }
         
-        copyButton.textContent = '复制失败';
+        // 使用i18n获取当前语言的失败提示文本
+        copyButton.textContent = window.i18n.getTranslation('copyFailed');
         copyButton.classList.add('error');
         
         // 保存新的定时器引用
         copyButtonTimer = setTimeout(() => {
-            copyButton.textContent = '复制';
+            copyButton.textContent = window.i18n.getTranslation('copy');
             copyButton.classList.remove('error');
         }, 1000);
     }
