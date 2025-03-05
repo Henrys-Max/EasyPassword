@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "EasyPassword",
+    "description": "Extension name"
+  },
+  "appDescription": {
+    "message": "Generate reliable passwords that are both secure and memorable with just one click.",
+    "description": "Extension description"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "EasyPassword",
+    "description": "扩展程序名称"
+  },
+  "appDescription": {
+    "message": "告别简单密码和遗忘困扰，一键生成兼顾安全与易记的可靠密码。",
+    "description": "扩展程序描述"
+  }
+}
