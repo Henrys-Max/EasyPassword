@@ -142,8 +142,6 @@ body {
     font-family: monospace;
     /* 移除输入框聚焦时的轮廓 */
     outline: none;
-    /* 文本居中显示 */
-    text-align: center;
 }
 
 /* 图标按钮基础样式：用于刷新等操作的通用按钮样式 */
