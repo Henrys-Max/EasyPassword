@@ -87,21 +87,16 @@ body {
 .header h1 {
     font-size: 24px;
     color: #f57c00;
-    margin: 0;
+    margin: 5px;
     font-weight: 600;
     text-align: center;
 }
 
-/* 版本号样式 */
-.version {
-    color:#666;
-    font-size: 12px;
-    margin-left: 8px;
-}
+
 
 /* 副标题样式：设置描述文本的颜色和大小 */
 .header p {
-    color: #7f8c8d;
+    color: #666;
     font-size: 13px;
     /* 添加字体粗细 */
     font-weight: 400;
