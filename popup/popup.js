@@ -313,7 +313,7 @@ function generatePassword() {
                 segment.classList.remove('active');
                 if (index < activeSegments) {
                     segment.classList.add('active');
-                    segment.style.backgroundColor = '#2d8b5c';
+                    segment.style.backgroundColor = '#3872e0';
                 } else {
                     segment.style.backgroundColor = '#ccc';
                 }

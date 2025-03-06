@@ -86,12 +86,11 @@ body {
 /* 主标题文本样式 */
 .header h1 {
     font-size: 24px;
-    color: #f57c00;
+    color: #3872e0;
     margin: 5px;
     font-weight: 600;
     text-align: center;
 }
-
 
 
 /* 副标题样式：设置描述文本的颜色和大小 */
@@ -102,7 +101,7 @@ body {
     font-weight: 400;
 }
 
-/* 密码显示区域样式：包含密码输入框和按钮的容器 */
+
 /* 密码显示区域样式：包含密码输入框和相关按钮的主容器 */
 .password-display {
     /* 设置底部外边距为20像素，与下方选项区域保持适当间距 */
@@ -143,15 +142,17 @@ body {
     font-family: monospace;
     /* 移除输入框聚焦时的轮廓 */
     outline: none;
+    /* 文本居中显示 */
+    text-align: center;
 }
 
 /* 图标按钮基础样式：用于刷新等操作的通用按钮样式 */
 .icon-button {
     width: 60px;
     /* 移除默认背景色 */
-    background: rgba(255, 94, 0, 0.1);
+    background: #ffffff;
     /* 添加边框 */
-    border: 1px solid #fa9e68;
+    border: 1px solid #3872e0;
     /* 设置内边距为8像素，确保点击区域足够大 */
     padding: 8px;
     /* 鼠标悬停时显示手型光标 */
@@ -182,8 +183,8 @@ body {
 
 /* 刷新图标悬停时的颜色效果 */
 .icon-button:hover .refresh-icon {
-    /* 设置图标颜色为主题橙色 */
-    filter: invert(48%) sepia(90%) saturate(2299%) hue-rotate(359deg) brightness(101%) contrast(106%);
+    /* 设置图标颜色为蓝色主题色 #3872e0 */
+    filter: invert(32%) sepia(97%) saturate(1223%) hue-rotate(210deg) brightness(92%) contrast(95%);
     /* 保持完全不透明 */
     opacity: 1;
 }
@@ -331,7 +332,7 @@ body {
     /* 设置圆角 */
     border-radius: 5px;
     /* 设置统一的红色背景 */
-    background-color: #f57c00;
+    background-color: #3872e0;
     /* 设置文字颜色 */
     color: white;
     /* 移除边框 */
@@ -459,7 +460,7 @@ input[type="range"]::-webkit-slider-thumb {
     /* 高度18像素 */
     height: 18px;
     /* 使用主题橙色 */
-    background: #f57c00;
+    background: #3872e0;
     /* 圆形滑块 */
     border-radius: 50%;
     /* 鼠标悬停时显示手型光标 */
@@ -471,7 +472,7 @@ input[type="range"]::-webkit-slider-thumb {
 /* 滑动条滑块悬停效果 */
 input[type="range"]::-webkit-slider-thumb:hover {
     /* 保持相同的背景色 */
-    background: #f57c00;
+    background: #3872e0;
 }
 
 /* 开关组样式：包含文本和开关按钮的容器 */
@@ -525,7 +526,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* 选中状态样式 */
 input:checked + .slider {
-    background-color: #f57c00;
+    background-color: #3872e0;
 }
 
 /* 选中状态滑块位置 */
