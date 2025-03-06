@@ -261,8 +261,8 @@ function generatePassword() {
         const useSymbols = includeSymbols.checked;
 
         // 验证参数有效性
-        if (isNaN(length) || length < 8 || length > 20) {
-            throw new Error('密码长度必须在8-20位之间');
+        if (isNaN(length) || length < 8 || length > 26) {
+            throw new Error('密码长度必须在8-26位之间');
         }
 
         // 更新状态提示
@@ -313,7 +313,7 @@ function generatePassword() {
                 segment.classList.remove('active');
                 if (index < activeSegments) {
                     segment.classList.add('active');
-                    segment.style.backgroundColor = '#006400';
+                    segment.style.backgroundColor = '#2d8b5c';
                 } else {
                     segment.style.backgroundColor = '#ccc';
                 }

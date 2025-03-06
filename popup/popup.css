@@ -30,7 +30,7 @@ body {
     /* 设置固定宽度为320像素，适合作为浏览器扩展的弹出窗口 */
     width: 320px;
     /* 设置内边距为16像素，使内容与边界保持适当距离 */
-    padding: 16px;
+    padding: 10px;
     /* 设置背景色为白色，形成与页面背景的对比 */
     background-color: #fff;
     /* 添加轻微的阴影效果，提升层次感，参数依次为：水平偏移、垂直偏移、模糊半径和阴影颜色 */
@@ -44,45 +44,67 @@ body {
     text-align: center;
     /* 底部外边距20像素，与下方内容保持适当间距 */
     margin-bottom: 20px;
+    /* 添加上下内边距 */
+    padding: 10px 0;
+    /* 添加底部边框 */
+    border-bottom: 1px solid #eee;
 }
 
 /* 主标题样式：设置字体大小和颜色 */
 /* 标题和版本号的容器 */
 .title-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* 应用标题容器样式 */
+.app-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* 左侧标题区域样式 */
+.title-left {
     /* 使用弹性布局 */
     display: flex;
-    /* 使用基线对齐，确保标题和版本号在视觉上对齐 */
-    align-items: baseline;
-    /* 水平居中对齐 */
-    justify-content: center;
-    /* 底部外边距8像素，与描述文本保持间距 */
-    margin-bottom: 8px;
+    /* 垂直居中对齐 */
+    align-items: center;
+    /* 设置间距 */
+    gap: 8px;
+}
+
+/* Logo图片样式 */
+.app-logo {
+    /* 设置固定宽度和高度 */
+    width: 16px;
+    height: 16px;
 }
 
 /* 主标题文本样式 */
 .header h1 {
-    /* 设置标题字体大小为24像素 */
     font-size: 24px;
-    /* 使用深蓝灰色作为标题颜色 */
-    color: #2c3e50;
-    /* 移除标题的默认外边距 */
+    color: #f57c00;
     margin: 0;
+    font-weight: 600;
+    text-align: center;
 }
 
 /* 版本号样式 */
 .version {
-    /* 使用浅灰色显示版本号 */
-    color: #999;
-    /* 设置版本号字体大小为12像素 */
+    color:#666;
     font-size: 12px;
-    /* 左侧外边距8像素，与标题保持间距 */
     margin-left: 8px;
 }
 
 /* 副标题样式：设置描述文本的颜色和大小 */
 .header p {
     color: #7f8c8d;
-    font-size: 14px;
+    font-size: 13px;
+    /* 添加字体粗细 */
+    font-weight: 400;
 }
 
 /* 密码显示区域样式：包含密码输入框和按钮的容器 */
@@ -92,7 +114,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* 密码输入组样式：使用flex布局组织密码显示和刷新按钮 */
 /* 密码输入组样式：使用弹性布局组织密码显示框和刷新按钮 */
 .password-input-group {
     /* 启用弹性布局 */
@@ -315,7 +336,7 @@ body {
     /* 设置圆角 */
     border-radius: 5px;
     /* 设置统一的红色背景 */
-    background-color: #ff5e00;
+    background-color: #f57c00;
     /* 设置文字颜色 */
     color: white;
     /* 移除边框 */
@@ -443,7 +464,7 @@ input[type="range"]::-webkit-slider-thumb {
     /* 高度18像素 */
     height: 18px;
     /* 使用主题橙色 */
-    background: #ff5e00;
+    background: #f57c00;
     /* 圆形滑块 */
     border-radius: 50%;
     /* 鼠标悬停时显示手型光标 */
@@ -455,7 +476,7 @@ input[type="range"]::-webkit-slider-thumb {
 /* 滑动条滑块悬停效果 */
 input[type="range"]::-webkit-slider-thumb:hover {
     /* 保持相同的背景色 */
-    background: #ff5e00;
+    background: #f57c00;
 }
 
 /* 开关组样式：包含文本和开关按钮的容器 */
@@ -509,7 +530,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* 选中状态样式 */
 input:checked + .slider {
-    background-color: #ff5e00;
+    background-color: #f57c00;
 }
 
 /* 选中状态滑块位置 */
