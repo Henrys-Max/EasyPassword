@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 初始化其他DOM元素
         copyButton = document.getElementById('copyButton');
         refreshButton = document.getElementById('refreshButton');
-        passwordType = document.getElementById('passwordType');
+        passwordType = document.querySelector('input[name="passwordType"]:checked');
         passwordLength = document.getElementById('passwordLength');
         lengthValue = document.getElementById('lengthValue');
         includeNumbers = document.getElementById('includeNumbers');
@@ -178,7 +178,8 @@ function loadSavedConfig() {
         }, (config) => {
             try {
                 // 更新UI元素的值
-                passwordType.value = config.passwordType;
+                document.querySelector(`input[name="passwordType"][value="${config.passwordType}"]`).checked = true;
+                passwordType = document.querySelector('input[name="passwordType"]:checked');
                 passwordLength.value = config.passwordLength;
                 lengthValue.textContent = config.passwordLength;
                 includeNumbers.checked = config.includeNumbers;
@@ -432,9 +433,14 @@ function initializeEventListeners() {
 
 
     // 密码类型变更事件
-    passwordType.addEventListener('change', () => {
-        generatePassword();
-        saveConfig();
+    document.querySelectorAll('input[name="passwordType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if(this.checked) {
+                passwordType = this; // 更新passwordType变量为当前选中的单选按钮
+                generatePassword();
+                saveConfig();
+            }
+        });
     });
 
     // 密码长度变更事件
@@ -483,14 +489,14 @@ function showSecurityWarning(show) {
         setTimeout(() => {
             warningElement.classList.add('show');
         }, 10);
-        // 2.5秒后自动隐藏
+        // 4秒后自动隐藏
         setTimeout(() => {
             warningElement.classList.remove('show');
             // 等待过渡动画完成后再隐藏元素
             setTimeout(() => {
                 warningElement.style.display = 'none';
             }, 300);
-        }, 2500);
+        }, 4000);
     } else {
         warningElement.classList.remove('show');
         // 等待过渡动画完成后再隐藏元素

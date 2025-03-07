@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 页面标题 -->
     <title>EasyPassword - 密码生成器</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- 引入外部样式表 -->
     <link rel="stylesheet" href="popup.css">
     <!-- 引入国际化模块 -->
@@ -66,12 +68,12 @@
             <!-- 密码类型选择：选择密码生成方式 -->
             <div class="option-group">
                 <label data-i18n="passwordType">类型</label>
-                <div class="select-wrapper">
-                    <!-- 下拉选择框：切换密码生成类型 -->
-                    <select id="passwordType">
-                        <option value="random" data-i18n="randomPassword"></option>
-                        <option value="memorable" data-i18n="memorablePassword"></option>
-                    </select>
+                <div class="btn-group" role="group" aria-label="密码类型选择">
+                    <input type="radio" class="btn-check" name="passwordType" id="randomType" value="random" checked>
+                    <label class="btn btn-outline-primary" for="randomType" data-i18n="randomPassword"></label>
+                    
+                    <input type="radio" class="btn-check" name="passwordType" id="memorableType" value="memorable">
+                    <label class="btn btn-outline-primary" for="memorableType" data-i18n="memorablePassword"></label>
                 </div>
             </div>
 
@@ -80,38 +82,32 @@
                 <label data-i18n="passwordLength"></label>
                 <!-- 滑动条包装器：包含滑动条和数值显示 -->
                 <div class="slider-wrapper">
-                    <!-- 范围滑动条：用于调整密码长度(8-20位) -->
-                    <input type="range" id="passwordLength" min="8" max="26" value="12">
+                    <!-- 范围滑动条：使用Bootstrap的range组件 -->
+                    <input type="range" class="form-range custom-range" id="passwordLength" min="8" max="26" value="15">
                     <!-- 长度数值显示 -->
-                    <span id="lengthValue">12</span>
+                    <span id="lengthValue" class="ms-2">15</span>
                 </div>
             </div>
             <!-- 字符类型控制：选择密码中包含的字符类型 -->
             <!-- 数字开关组 -->
             <div class="option-group">
-                <div class="switch-group">
-                    <div data-i18n="includeNumbers"></div>
-                    <!-- 数字切换开关：控制是否包含数字 -->
-                    <label class="switch">
-                        <input type="checkbox" id="includeNumbers" checked>
-                        <span class="slider"></span>
-                    </label>
+                <label data-i18n="includeNumbers"></label>
+                <!-- 数字切换开关：使用Bootstrap的form-switch组件 -->
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="includeNumbers" checked>
                 </div>
             </div>
             <!-- 符号开关组 -->
             <div class="option-group">
-                <div class="switch-group">
-                    <div data-i18n="includeSymbols"></div>
-                    <!-- 符号切换开关：控制是否包含特殊符号 -->
-                    <label class="switch">
-                        <input type="checkbox" id="includeSymbols">
-                        <span class="slider"></span>
-                    </label>
-                </div>                
-            </div>
-            <!-- 安全提示信息 -->
-            <div id="securityWarning" data-i18n="securityWarning">
-            </div>
+                <label data-i18n="includeSymbols"></label>
+                <!-- 符号切换开关：使用Bootstrap的form-switch组件 -->
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="includeSymbols">
+                </div>
+            </div>            
+        </div>
+        <!-- 安全提示信息 -->
+        <div id="securityWarning" class="alert alert-warning" role="alert" data-i18n="securityWarning">
         </div>
     </div>
 </body>
