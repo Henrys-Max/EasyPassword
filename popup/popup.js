@@ -479,9 +479,16 @@ function initializeEventListeners() {
 
 }
 // 显示或隐藏安全提示信息
+let securityWarningTimer;
 function showSecurityWarning(show) {
     const warningElement = document.getElementById('securityWarning');
     if (!warningElement) return;
+
+    // 清除之前的计时器
+    if (securityWarningTimer) {
+        clearTimeout(securityWarningTimer);
+        securityWarningTimer = null;
+    }
 
     if (show) {
         warningElement.style.display = 'block';
@@ -489,17 +496,16 @@ function showSecurityWarning(show) {
         setTimeout(() => {
             warningElement.classList.add('show');
         }, 10);
-        // 4秒后自动隐藏
-        setTimeout(() => {
+        // 3秒后自动隐藏
+        securityWarningTimer = setTimeout(() => {
             warningElement.classList.remove('show');
             // 等待过渡动画完成后再隐藏元素
             setTimeout(() => {
                 warningElement.style.display = 'none';
             }, 300);
-        }, 4000);
+        }, 3000);
     } else {
         warningElement.classList.remove('show');
-        // 等待过渡动画完成后再隐藏元素
         setTimeout(() => {
             warningElement.style.display = 'none';
         }, 300);

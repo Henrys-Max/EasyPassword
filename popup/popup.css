@@ -152,7 +152,7 @@ body {
 #securityWarning.show {
     opacity: 1;
     height: auto;
-    min-height: 40px;
+    min-height: 30px;
     margin-top: 10px;
     padding: 0.75rem 1.25rem;
     display: block;
@@ -208,8 +208,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
-    height: 25px;
+    gap: 5px;
+    height: 28px;
     margin-bottom: 12px;
 }
 
