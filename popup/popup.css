@@ -149,19 +149,29 @@ body {
     display: none;
 }
 
+/* 当安全警告显示时的样式 */
 #securityWarning.show {
+    /* 设置不透明度为1，使元素完全可见 */
     opacity: 1;
+    /* 高度自适应内容 */
     height: auto;
+    /* 设置最小高度为30像素 */
     min-height: 30px;
+    /* 上边距为10 */
     margin-top: 10px;
-    padding: 0.75rem 1.25rem;
+    /* 设置内边距：上下0.5rem，左右1.25rem */
+    padding: 0.5rem 1.25rem;
+    /* 设置为块级元素 */
     display: block;
+    /* 设置文字颜色为暗黄色 */
     color: #664d03;
+    /* 设置背景色为浅黄色 */
     background-color: #fff3cd;
+    /* 设置1像素实线边框，颜色为浅黄色 */
     border: 1px solid #ffecb5;
+    /* 设置边框圆角为0.375rem */
     border-radius: 0.375rem;
 }
-
 /* 密码强度指示器样式 */
 .strength-meter {
     margin: 8px 0;
