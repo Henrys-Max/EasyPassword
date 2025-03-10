@@ -1,60 +1,72 @@
 /* 全局样式重置与设计系统变量定义 */
+/* 重置所有元素的默认样式，并定义全局使用的边框圆角变量 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    --border-radius-medium: 5px;
-    --border-radius-small: 3px;
-    --border-radius-large: 8px;
+    --border-radius-medium: 5px;  /* 中等圆角，用于一般元素 */
+    --border-radius-small: 3px;   /* 小圆角，用于次要元素 */
+    --border-radius-large: 8px;   /* 大圆角，用于主要元素 */
 }
 
 /* 基础样式设置 */
+/* 设置全局字体族、字号、行高和颜色，确保良好的可读性和视觉层次 */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;
     line-height: 1.5;
-    color: #666;
-    background-color: #f5f5f5;
+    color: #666;  /* 使用中灰色作为默认文本颜色，提供良好的对比度 */
+    background-color: #f5f5f5;  /* 浅灰色背景，营造柔和的视觉效果 */
 }
 
 /* 主容器样式 */
+/* 设置弹出窗口的主容器尺寸和视觉效果 */
 .container {
-    width: 320px;
+    width: 320px;  /* 固定宽度，适合浏览器扩展弹出窗口 */
     padding: 16px;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* 添加轻微阴影，提升层次感 */
 }
 
 /* 标题区域样式 */
+/* 设置应用标题区域的布局和边框 */
 .header {
     text-align: center;
     margin-bottom: 10px;
     padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #eee;  /* 添加底部边框，分隔标题和内容区域 */
 }
 
+/* 标题容器布局 */
+/* 使用flex布局使标题居中对齐 */
 .title-container {
     display: flex;
     justify-content: center;
     width: 100%;
 }
 
+/* 应用标题和左侧标题的共同样式 */
+/* 使用flex布局实现图标和文字的对齐 */
 .app-title,
 .title-left {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 8px;  /* 设置图标和文字之间的间距 */
 }
 
+/* 标题文字样式 */
+/* 设置主标题的字体大小、颜色和权重 */
 .header h1 {
     font-size: 24px;
-    color: #3872e0;
+    color: #3872e0;  /* 使用品牌蓝色 */
     margin: 5px;
     font-weight: 600;
     text-align: center;
 }
 
+/* 标题描述文字样式 */
+/* 设置副标题的字体样式，使用较小的字号和浅色 */
 .header p {
     color: #666;
     font-size: 13px;
@@ -62,72 +74,88 @@ body {
 }
 
 /* 密码显示区域样式 */
+/* 设置密码显示区域的外边距 */
 .password-display {
     margin-bottom: 20px;
 }
 
+/* 密码输入组样式 */
+/* 设置密码显示框的边框和背景 */
 .password-input-group {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    background: #f8f9fa;
+    background: #f8f9fa;  /* 使用浅灰色背景 */
     border: 2px solid #ddd;
     border-radius: var(--border-radius-medium);
     padding: 4px;
 }
 
+/* 密码输出框样式 */
+/* 设置密码文本框的样式，使用等宽字体提高可读性 */
 #passwordOutput {
     flex: 1;
     border: none;
     background: transparent;
     padding: 8px;
     font-size: 16px;
-    font-family: monospace;
+    font-family: monospace;  /* 使用等宽字体，便于密码字符对齐 */
     outline: none;
 }
 
 /* 按钮样式 */
+/* 设置图标按钮的基本样式 */
 .icon-button {
     width: 60px;
     background: #ffffff;
-    border: 1px solid #3872e0;
+    border: 1px solid #3872e0;  /* 使用品牌蓝色边框 */
     padding: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;  /* 添加过渡效果 */
 }
 
+/* 刷新图标样式 */
+/* 设置刷新图标的尺寸和透明度 */
 .refresh-icon {
     width: 20px;
     height: 20px;
     opacity: 0.6;
-    transition: opacity 0.2s, transform 0.3s ease, filter 0.3s ease;
+    transition: opacity 0.2s, transform 0.3s ease, filter 0.3s ease;  /* 多重过渡效果 */
 }
 
+/* 刷新图标悬停效果 */
+/* 当鼠标悬停时改变图标颜色和透明度 */
 .icon-button:hover .refresh-icon {
     filter: invert(32%) sepia(97%) saturate(1223%) hue-rotate(210deg) brightness(92%) contrast(95%);
     opacity: 1;
 }
 
+/* 刷新图标旋转动画样式 */
+/* 添加刷新按钮的旋转动画效果 */
 .refresh-icon.rotate {
     animation: rotate360 0.5s ease;
 }
 
+/* 定义360度旋转动画 */
 @keyframes rotate360 {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
 /* 按钮组样式 */
+/* 设置按钮组的布局和间距 */
 .button-group {
     display: flex;
     gap: 10px;
     width: 100%;
 }
 
+/* 复制按钮样式 */
+/* 设置复制按钮的主要样式，使用品牌蓝色 */
 #copyButton {
     flex: 1;
     padding: 8px 16px;
@@ -138,7 +166,9 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
-/* 安全提示信息样式 */
+
+/* 安全提示信息基础样式 */
+/* 设置安全警告的初始隐藏状态和过渡效果 */
 #securityWarning {
     opacity: 0;
     height: 0;
@@ -149,63 +179,66 @@ body {
     display: none;
 }
 
-/* 当安全警告显示时的样式 */
+/* 安全提示信息显示状态样式 */
+/* 定义警告信息显示时的样式，使用黄色主题 */
 #securityWarning.show {
-    /* 设置不透明度为1，使元素完全可见 */
     opacity: 1;
-    /* 高度自适应内容 */
     height: auto;
-    /* 设置最小高度为30像素 */
     min-height: 30px;
-    /* 上边距为10 */
     margin-top: 10px;
-    /* 设置内边距：上下0.5rem，左右1.25rem */
     padding: 0.5rem 1.25rem;
-    /* 设置为块级元素 */
     display: block;
-    /* 设置文字颜色为暗黄色 */
-    color: #664d03;
-    /* 设置背景色为浅黄色 */
-    background-color: #fff3cd;
-    /* 设置1像素实线边框，颜色为浅黄色 */
+    color: #664d03;  /* 深黄色文字 */
+    background-color: #fff3cd;  /* 浅黄色背景 */
     border: 1px solid #ffecb5;
-    /* 设置边框圆角为0.375rem */
     border-radius: 0.375rem;
 }
+
 /* 密码强度指示器样式 */
+/* 设置强度指示器的外边距 */
 .strength-meter {
     margin: 8px 0;
 }
 
+/* 强度指示器分段容器 */
+/* 使用flex布局排列强度指示器的分段 */
 .strength-segments {
     display: flex;
     gap: 4px;
     margin-bottom: 4px;
 }
 
+/* 强度指示器单个分段 */
+/* 设置每个分段的基本样式 */
 .strength-segment {
     flex: 1;
     height: 8px;
-    background-color: #e0e0e0;
+    background-color: #e0e0e0;  /* 默认灰色背景 */
     border-radius: 4px;
     transition: background-color 0.3s ease;
 }
 
+/* 强度标签样式 */
+/* 设置强度文本标签的布局和样式 */
 .strength-label {
     text-align: center;
     margin: 4px 0;
     font-size: 13px;    
-    color: #666;
+    color: #999;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+/* 强度和熵值显示样式 */
+/* 设置强度级别和熵值的显示方式 */
 .strength-label .level,
 .strength-label .entropy {
     display: inline-block;
 }
 
+/* 诊断面板显示状态 */
+/* 设置诊断面板显示时的样式 */
 .diagnosis-panel.show {
     display: block;
     max-height: 500px;
@@ -214,6 +247,7 @@ body {
 }
 
 /* 选项组样式 */
+/* 设置选项组的布局和间距 */
 .option-group {
     display: flex;
     align-items: center;
@@ -223,18 +257,22 @@ body {
     margin-bottom: 12px;
 }
 
+/* 最后一个选项组样式 */
+/* 移除最后一个选项组的底部边距 */
 .option-group:last-child {
     margin-bottom: 0;
 }
 
 /* 密码选项配置区域样式 */
+/* 设置选项配置区域的背景和边框 */
 .password-options {
     background-color: #f8f9fa;
     padding: 10px;
     border-radius: 4px;
 }
 
-/* 开关组件样式 */
+/* 开关组件容器样式 */
+/* 设置开关组件的布局 */
 .form-check.form-switch {
     margin: 0;
     padding: 0;
@@ -242,11 +280,15 @@ body {
     justify-content: flex-end;
 }
 
+/* 开关输入框基础样式 */
+/* 设置开关输入框的基本样式 */
 .form-check-input {
     margin: 0;
     cursor: pointer;
 }
 
+/* 开关组件输入框样式 */
+/* 设置开关组件的尺寸和交互样式 */
 .form-check.form-switch .form-check-input {
     margin-left: 0;
     width: 40px;
@@ -254,11 +296,15 @@ body {
     cursor: pointer;
 }
 
+/* 开关组件选中状态样式 */
+/* 设置开关被选中时的颜色 */
 .form-check.form-switch .form-check-input:checked {
     background-color: #3872e0;
     border-color: #3872e0;
 }
 
+/* 开关组件标签样式 */
+/* 设置开关标签的文字样式 */
 .form-check.form-switch .form-check-label {
     margin-right: 10px;
     color: #666;
@@ -266,16 +312,19 @@ body {
     cursor: pointer;
 }
 
-/* 按钮组和按钮样式 */
+/* 按钮组容器样式 */
+/* 设置按钮组的布局和边框 */
 .btn-group {
     flex: 1;
     display: flex;
     max-width: 140px;
-    height: 25px;
+    height: 90%;
     margin: 0;
     border: 1px solid #3872e0;
 }
 
+/* 按钮基础样式 */
+/* 设置按钮的基本外观和交互效果 */
 .btn {
     cursor: pointer;
     display: inline-flex;
@@ -292,28 +341,31 @@ body {
 }
 
 /* 滑动条容器样式 */
+/* 设置滑动条的布局和对齐方式 */
 .slider-wrapper {
-    /* 使用flex布局 */
     display: flex;
-    /* 垂直居中对齐 */
     align-items: center;
-    /* 内容靠右对齐 */
     justify-content: flex-end;
-    /* 元素之间的间距为5px */
     gap: 5px;
     width: 80%;
 }
 
-/* Webkit浏览器的轨道样式 */
+/* Webkit浏览器滑动条轨道样式 */
+/* 自定义Webkit浏览器的滑动条轨道外观 */
 .form-range::-webkit-slider-runnable-track {
     background: #d1d1d1;
     border-radius: 3px;
     height: 6px;
 }
-.custom-range{
+
+/* 自定义范围滑动条样式 */
+/* 设置范围滑动条的宽度 */
+.custom-range {
     width: 80%;
 }
 
+/* 长度值显示样式 */
+/* 设置长度数值显示框的样式 */
 #lengthValue {
     display: flex;
     align-items: center;
