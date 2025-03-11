@@ -11,9 +11,9 @@
     <!-- 引入外部样式表 -->
     <link rel="stylesheet" href="popup.css">
     <!-- 引入国际化模块 -->
-    <script src="/lib/shared/i18n.js"></script>
+    <script type="module" src="../lib/shared/i18n.js"></script>
     <!-- 引入popup脚本 -->
-    <script src="/popup/popup.js"></script>
+    <script type="module" src="popup.js"></script>
 </head>
 <body>
     <!-- 主容器：包含所有UI组件 -->
@@ -77,32 +77,67 @@
                 </div>
             </div>
 
-            <!-- 密码长度控制：调整密码的字符长度 -->
-            <div class="option-group">
-                <label data-i18n="passwordLength"></label>
-                <!-- 滑动条包装器：包含滑动条和数值显示 -->
-                <div class="slider-wrapper">
-                    <!-- 范围滑动条：使用Bootstrap的range组件 -->
-                    <input type="range" class="form-range custom-range" id="passwordLength" min="8" max="26" value="15">
-                    <!-- 长度数值显示 -->
-                    <span id="lengthValue" class="ms-2">15</span>
+            <!-- 随机密码配置面板 -->
+            <div id="randomOptions" class="random-options">
+                <!-- 密码长度控制：调整密码的字符长度 -->
+                <div class="option-group">
+                    <label data-i18n="passwordLength"></label>
+                    <!-- 滑动条包装器：包含滑动条和数值显示 -->
+                    <div class="slider-wrapper">
+                        <!-- 范围滑动条：使用Bootstrap的range组件 -->
+                        <input type="range" class="form-range custom-range" id="passwordLength" min="8" max="26" value="15">
+                        <!-- 长度数值显示 -->
+                        <span id="lengthValue" class="ms-2">15</span>
+                    </div>
+                </div>
+                <!-- 字符类型控制：选择密码中包含的字符类型 -->
+                <!-- 数字开关组 -->
+                <div class="option-group">
+                    <label data-i18n="includeNumbers"></label>
+                    <!-- 数字切换开关：使用Bootstrap的form-switch组件 -->
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="includeNumbers" checked>
+                    </div>
+                </div>
+                <!-- 符号开关组 -->
+                <div class="option-group">
+                    <label data-i18n="includeSymbols"></label>
+                    <!-- 符号切换开关：使用Bootstrap的form-switch组件 -->
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="includeSymbols">
+                    </div>
                 </div>
             </div>
-            <!-- 字符类型控制：选择密码中包含的字符类型 -->
-            <!-- 数字开关组 -->
-            <div class="option-group">
-                <label data-i18n="includeNumbers"></label>
-                <!-- 数字切换开关：使用Bootstrap的form-switch组件 -->
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="includeNumbers" checked>
+
+            <!-- 易记密码配置面板 -->
+            <div id="memorableOptions" class="memorable-options" style="display: none;">
+                <!-- 单词数量控制 -->
+                <div class="option-group">
+                    <label data-i18n="wordCount">单词数量</label>
+                    <div class="slider-wrapper">
+                        <input type="range" class="form-range custom-range" id="wordCount" min="2" max="5" value="3">
+                        <span id="wordCountValue" class="ms-2">3</span>
+                    </div>
                 </div>
-            </div>
-            <!-- 符号开关组 -->
-            <div class="option-group">
-                <label data-i18n="includeSymbols"></label>
-                <!-- 符号切换开关：使用Bootstrap的form-switch组件 -->
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="includeSymbols">
+
+                <!-- 分隔符选择 -->
+                <div class="option-group">
+                    <label data-i18n="separator">分隔符</label>
+                    <select class="form-select" id="separator">
+                        <option value="-" data-i18n="separatorHyphen">连字符 (-)</option>
+                        <option value="_" data-i18n="separatorUnderscore">下划线 (_)</option>
+                        <option value="?" data-i18n="separatorQuestion">问号 (?)</option>
+                        <option value="." data-i18n="separatorDot">句号 (.)</option>
+                        <option value="#" data-i18n="separatorHash">井号 (#)</option>
+                    </select>
+                </div>
+
+                <!-- 首字母大小写控制 -->
+                <div class="option-group">
+                    <label data-i18n="capitalizeFirst">首字母大写</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="capitalizeFirst" checked>
+                    </div>
                 </div>
             </div>            
         </div>
