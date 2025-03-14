@@ -9,23 +9,52 @@
     --border-radius-large: 8px;   /* 大圆角，用于主要元素 */
 }
 
+/* 定义主题颜色变量 */
+:root {
+    /* 浅色主题变量 */
+    --text-color: #000;                    /* 定义主要文本颜色为中灰色 */
+    --text-color-secondary: #999;          /* 定义次要文本颜色为浅灰色 */
+    --bg-color: #f5f5f5;                  /* 定义背景颜色为淡灰色 */
+    --container-bg: #fff;                  /* 定义容器背景为白色 */
+    --border-color: #eee;                  /* 定义边框颜色为极浅灰色 */
+    --input-bg: #f8f9fa;                  /* 定义输入框背景为浅灰白色 */
+    --input-border: #ddd;                 /* 定义输入框边框为浅灰色 */
+    --brand-color: #3872e0;               /* 定义品牌主色为蓝色 */
+    --shadow-color: rgba(0, 0, 0, 0.1);   /* 定义阴影颜色为10%透明度的黑色 */
+}
+
+/* 深色主题变量 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #fff;                /* 深色模式下文本颜色为白色 */
+        --text-color-secondary: #999999;      /* 深色模式下次要文本为灰色 */
+        --bg-color: #1a1a1a;                 /* 深色模式下背景为深灰色 */
+        --container-bg: #2d2d2d;             /* 深色模式下容器背景为中深灰色 */
+        --border-color: #404040;             /* 深色模式下边框为深灰色 */
+        --input-bg: #363636;                 /* 深色模式下输入框背景为深灰色 */
+        --input-border: #505050;             /* 深色模式下输入框边框为中灰色 */
+        --brand-color: #4a8bff;              /* 深色模式下品牌色为亮蓝色 */
+        --shadow-color: rgba(0, 0, 0, 0.3);  /* 深色模式下阴影为30%透明度的黑色 */
+    }
+}
+
 /* 基础样式设置 */
 /* 设置全局字体族、字号、行高和颜色，确保良好的可读性和视觉层次 */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;
     line-height: 1.5;
-    color: #666;  /* 使用中灰色作为默认文本颜色，提供良好的对比度 */
-    background-color: #f5f5f5;  /* 浅灰色背景，营造柔和的视觉效果 */
+    color: var(--text-color);
+    background-color: var(--bg-color);
 }
 
 /* 主容器样式 */
 /* 设置弹出窗口的主容器尺寸和视觉效果 */
 .container {
-    width: 320px;  /* 固定宽度，适合浏览器扩展弹出窗口 */
+    width: 320px;
     padding: 16px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* 添加轻微阴影，提升层次感 */
+    background-color: var(--container-bg);
+    box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 /* 标题区域样式 */
@@ -34,7 +63,7 @@ body {
     text-align: center;
     margin-bottom: 10px;
     padding: 10px 0;
-    border-bottom: 1px solid #eee;  /* 添加底部边框，分隔标题和内容区域 */
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* 标题容器布局 */
@@ -85,8 +114,8 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    background: #f8f9fa;  /* 使用浅灰色背景 */
-    border: 2px solid #ddd;
+    background: var(--input-bg);
+    border: 2px solid var(--input-border);
     border-radius: var(--border-radius-medium);
     padding: 4px;
 }
@@ -98,8 +127,8 @@ body {
     border: none;
     background: transparent;
     padding: 8px;
-    font-size: 16px;
-    font-family: monospace;  /* 使用等宽字体，便于密码字符对齐 */
+    color: var(--text-color);
+    font-family: monospace;
     outline: none;
 }
 
@@ -107,15 +136,15 @@ body {
 /* 设置图标按钮的基本样式 */
 .icon-button {
     width: 60px;
-    background: #ffffff;
-    border: 1px solid #3872e0;  /* 使用品牌蓝色边框 */
+    background: var(--container-bg);
+    border: 1px solid var(--brand-color);
     padding: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: var(--border-radius-medium);
-    transition: background-color 0.3s ease;  /* 添加过渡效果 */
+    transition: background-color 0.3s ease;
 }
 
 /* 刷新图标样式 */
@@ -124,7 +153,20 @@ body {
     width: 20px;
     height: 20px;
     opacity: 0.6;
-    transition: opacity 0.2s, transform 0.3s ease, filter 0.3s ease;  /* 多重过渡效果 */
+    transition: opacity 0.2s, transform 0.3s ease, filter 0.3s ease;
+    filter: invert(var(--icon-invert));
+}
+
+@media (prefers-color-scheme: dark) {
+    .refresh-icon {
+        --icon-invert: 0.8;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .refresh-icon {
+        --icon-invert: 0;
+    }
 }
 
 /* 刷新图标悬停效果 */
@@ -266,9 +308,70 @@ body {
 /* 密码选项配置区域样式 */
 /* 设置选项配置区域的背景和边框 */
 .password-options {
-    background-color: #f8f9fa;
+    background-color: var(--input-bg);
     padding: 10px;
     border-radius: 4px;
+}
+
+/* 选项组标签样式 */
+.option-group label {
+    flex: 0 0 auto;
+    color: var(--text-color-secondary);
+    font-size: 14px;
+}
+
+/* 分隔符选择下拉框样式 */
+.form-select {
+    width: 40%;
+    height: 30px;
+    font-size: 13px;
+    border: 1px solid var(--input-border);
+    border-radius: var(--border-radius-small);
+    background-color: var(--input-bg);
+    color: var(--text-color-secondary);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23666' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .form-select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+}
+
+.form-select:focus {
+    border-color: var(--brand-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(56, 114, 224, 0.25);
+}
+
+/* 长度值和单词数显示框样式 */
+#lengthValue,
+#wordCountValue {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    padding: 2px;
+    text-align: center;
+    border: 1px solid var(--input-border);
+    border-radius: 3px;
+    background-color: var(--input-bg);
+    color: var(--text-color-secondary);
+}
+
+/* Webkit浏览器滑动条轨道样式 */
+.form-range::-webkit-slider-runnable-track {
+    background: var(--input-border);
+    border-radius: 3px;
+}
+
+.form-range::-webkit-slider-thumb {
+    background: var(--brand-color);
 }
 
 /* 开关组件容器样式 */
@@ -403,13 +506,6 @@ body {
     gap: 10px;
 }
 
-/* 选项组标签样式 */
-.option-group label {
-    flex: 0 0 auto;
-    color: #666;
-    font-size: 14px;
-}
-
 /* 随机密码配置项样式 */
 .random-options {
     max-height: 300px;
@@ -425,31 +521,15 @@ body {
     display: none;
 }
 
-/* 设置单词数显示框的样式 */
-#wordCountValue {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    padding: 2px;
-    text-align: center;
-    border: 1px solid #999;
-    border-radius: 3px;
-}
 
 /* 分隔符选择下拉框样式 */
 .form-select {
-    width: 40%;
+    width: 35%;
     height: 30px;
     font-size: 13px;
-    border: 1px solid #ced4da;
+    border: 1px solid var(--input-border);
     border-radius: var(--border-radius-small);
-    background-color: #fff;
+    background-color: var(--input-bg);
+    color: var(--text-color-secondary);
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.form-select:focus {
-    border-color: #3872e0;
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem rgba(56, 114, 224, 0.25);
 }
