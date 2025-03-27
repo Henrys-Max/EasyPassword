@@ -27,20 +27,30 @@ export const loadScripts = () => {
             });
         };
 
-        // 按顺序加载所有依赖
-        Promise.resolve()
-            .then(() => loadScript('../lib/shared/charset.js'))
-            .then(() => loadScript('../lib/shared/utils.js'))
-            .then(() => loadScript('../lib/shared/strength.js'))
+        // 预加载所有脚本，避免串行加载导致的延迟
+        const charsetPromise = loadScript('../lib/shared/charset.js');
+        const utilsPromise = loadScript('../lib/shared/utils.js');
+        const strengthPromise = loadScript('../lib/shared/strength.js');
+        
+        // 等待基础模块加载完成后再加载密码生成器
+        Promise.all([charsetPromise, utilsPromise, strengthPromise])
             .then(() => loadScript('../lib/password.js'))
             .then(() => {
-                // 等待密码生成器初始化
+                // 设置最大等待时间，避免无限等待
+                let attempts = 0;
+                const maxAttempts = 50; // 最多等待5秒
+                
                 const checkGenerator = () => {
                     if (window.passwordGenerator) {
                         console.log('密码生成器初始化成功');
                         resolve();
-                    } else {
+                    } else if (attempts < maxAttempts) {
+                        attempts++;
                         setTimeout(checkGenerator, 100);
+                    } else {
+                        // 超时后仍然继续，但记录错误
+                        console.warn('密码生成器初始化超时，继续执行');
+                        resolve();
                     }
                 };
                 checkGenerator();

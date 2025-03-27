@@ -11,50 +11,53 @@ export const generatePassword = () => {
     const { passwordOutput, passwordType, passwordLength, includeNumbers, includeSymbols } = getDOMElements();
 
     // 验证必需的DOM元素是否存在
-    if (!passwordOutput || !passwordType || !passwordLength || !includeNumbers || !includeSymbols) {
-        const error = new Error('必需的DOM元素未找到');
-        console.error(error);
-        if (passwordOutput) {
-            passwordOutput.value = '初始化失败：' + error.message;
-        }
+    if (!passwordOutput) {
+        console.error('密码输出元素未找到');
         return;
     }
 
+    // 设置超时处理，确保不会无限等待
+    let passwordGenerated = false;
+    const timeoutId = setTimeout(() => {
+        if (!passwordGenerated) {
+            console.warn('密码生成超时，使用备用方法');
+            passwordOutput.value = '生成超时，请重试...';
+            // 移除可能的事件监听器
+            window.removeEventListener('passwordGenerated', handlePasswordGenerated);
+            window.removeEventListener('passwordError', handlePasswordError);
+        }
+    }, 3000); // 3秒超时
+
     // 检查密码生成器是否已初始化
     if (!window.passwordGenerator) {
-        const error = new Error('密码生成器未初始化');
-        console.error(error);
-        passwordOutput.value = '等待初始化：' + error.message;
-        // 定期检查密码生成器是否已初始化
+        console.warn('密码生成器未初始化，使用备用方法');
+        passwordOutput.value = '生成器未就绪，请稍后再试...';
+        
+        // 最多等待2秒钟
+        let attempts = 0;
+        const maxAttempts = 20;
         const checkGenerator = setInterval(() => {
             if (window.passwordGenerator) {
                 clearInterval(checkGenerator);
                 generatePassword();
+            } else if (attempts >= maxAttempts) {
+                clearInterval(checkGenerator);
+                passwordOutput.value = '生成器初始化失败，请刷新页面重试';
             }
+            attempts++;
         }, 100);
         return;
     }
 
-    // 检查密码生成器方法是否可用
-    if (typeof window.passwordGenerator.generateRandomPassword !== 'function' || 
-        typeof window.passwordGenerator.generateMemorablePassword !== 'function') {
-        const error = new Error('密码生成器功能不完整');
-        console.error(error);
-        passwordOutput.value = '初始化错误：' + error.message;
-        return;
-    }
-
     try {
-        // 获取并验证参数
-        const type = passwordType.value;
-        const length = parseInt(passwordLength.value);
-        const useNumbers = includeNumbers.checked;
-        const useSymbols = includeSymbols.checked;
+        // 获取参数，使用默认值防止错误
+        const type = passwordType?.value || 'random';
+        const length = parseInt(passwordLength?.value || '12');
+        const useNumbers = includeNumbers?.checked !== false; // 默认为true
+        const useSymbols = includeSymbols?.checked || false;
 
-        // 验证参数有效性
-        if (isNaN(length) || length < 8 || length > 26) {
-            throw new Error('密码长度必须在8-26位之间');
-        }
+        // 验证参数有效性，使用安全的默认值
+        const safeLength = (isNaN(length) || length < 8 || length > 26) ? 12 : length;
 
         // 更新状态提示
         passwordOutput.value = `正在生成${type === 'random' ? '随机' : '易记'}密码...`;
@@ -62,18 +65,27 @@ export const generatePassword = () => {
         // 记录生成参数
         console.log('密码生成参数:', {
             type,
-            length,
+            length: safeLength,
             useNumbers,
             useSymbols
         });
 
         // 添加事件监听器处理密码生成结果
         const handlePasswordGenerated = (event) => {
+            passwordGenerated = true;
+            clearTimeout(timeoutId);
+            
             const { password } = event.detail;
             passwordOutput.value = password;
             
             // 评估密码强度并更新UI
-            updatePasswordStrength(password);
+            try {
+                if (window.PasswordStrength) {
+                    updatePasswordStrength(password);
+                }
+            } catch (strengthError) {
+                console.warn('密码强度评估失败:', strengthError);
+            }
 
             // 移除事件监听器
             window.removeEventListener('passwordGenerated', handlePasswordGenerated);
@@ -81,9 +93,13 @@ export const generatePassword = () => {
         };
 
         const handlePasswordError = (event) => {
+            passwordGenerated = true;
+            clearTimeout(timeoutId);
+            
             const { message } = event.detail;
             console.error('密码生成失败:', message);
-            passwordOutput.value = '生成失败：' + message;
+            passwordOutput.value = '生成失败，请重试...';
+            
             // 移除事件监听器
             window.removeEventListener('passwordGenerated', handlePasswordGenerated);
             window.removeEventListener('passwordError', handlePasswordError);
@@ -93,11 +109,16 @@ export const generatePassword = () => {
         window.addEventListener('passwordGenerated', handlePasswordGenerated);
         window.addEventListener('passwordError', handlePasswordError);
 
+        // 检查密码生成器方法是否可用
+        const canGenerateRandom = typeof window.passwordGenerator.generateRandomPassword === 'function';
+        const canGenerateMemorable = typeof window.passwordGenerator.generateMemorablePassword === 'function';
+        
+        if (!canGenerateRandom && !canGenerateMemorable) {
+            throw new Error('密码生成器功能不可用');
+        }
+
         // 调用密码生成方法
-        if (type === 'random') {
-            console.log('开始生成随机密码...');
-            window.passwordGenerator.generateRandomPassword(length, useNumbers, useSymbols);
-        } else {
+        if (type === 'memorable' && canGenerateMemorable) {
             console.log('开始生成易记密码...');
             // 获取易记密码的额外配置
             const wordCount = document.getElementById('wordCount');
@@ -112,11 +133,30 @@ export const generatePassword = () => {
             };
             
             window.passwordGenerator.generateMemorablePassword(memorableOptions);
+        } else {
+            // 默认生成随机密码
+            console.log('开始生成随机密码...');
+            if (canGenerateRandom) {
+                window.passwordGenerator.generateRandomPassword(safeLength, useNumbers, useSymbols);
+            } else if (canGenerateMemorable) {
+                // 如果随机密码生成不可用，尝试使用易记密码
+                window.passwordGenerator.generateMemorablePassword();
+            } else {
+                throw new Error('无法生成密码');
+            }
         }
 
     } catch (error) {
+        // 确保清除超时计时器
+        passwordGenerated = true;
+        clearTimeout(timeoutId);
+        
         console.error('密码生成过程出错:', error);
-        passwordOutput.value = '生成失败：' + error.message;
+        passwordOutput.value = '生成失败，请重试...';
+        
+        // 移除可能的事件监听器
+        window.removeEventListener('passwordGenerated', handlePasswordGenerated);
+        window.removeEventListener('passwordError', handlePasswordError);
     }
 };
 

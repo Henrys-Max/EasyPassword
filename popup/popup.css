@@ -350,8 +350,7 @@ body {
 }
 
 /* 长度值和单词数显示框样式 */
-#lengthValue,
-#wordCountValue {
+#lengthValue, #wordCountValue {
     display: flex;
     align-items: center;
     justify-content: center;
