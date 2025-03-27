@@ -466,18 +466,6 @@ body {
     width: 80%;
 }
 
-/* 长度值显示样式 */
-/* 设置长度数值显示框的样式 */
-#lengthValue {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    padding: 2px;
-    text-align: center;
-    border: 1px solid #999;
-    border-radius: 3px;
-}
 
 /* 复选框组样式 */
 .checkboxes {
