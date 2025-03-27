@@ -452,13 +452,7 @@ body {
     width: 180px;
 }
 
-/* Webkit浏览器滑动条轨道样式 */
-/* 自定义Webkit浏览器的滑动条轨道外观 */
-.form-range::-webkit-slider-runnable-track {
-    background: #d1d1d1;
-    border-radius: 3px;
-    height: 6px;
-}
+
 
 /* 自定义范围滑动条样式 */
 /* 设置范围滑动条的宽度 */
@@ -484,14 +478,7 @@ body {
     margin-top: 10px;
 }
 
-/* 选项组基础样式 */
-.option-group {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    gap: 10px;
-}
+
 
 /* 随机密码配置项样式 */
 .random-options {
@@ -506,17 +493,4 @@ body {
     opacity: 0;
     margin-bottom: 0;
     display: none;
-}
-
-
-/* 分隔符选择下拉框样式 */
-.form-select {
-    width: 35%;
-    height: 30px;
-    font-size: 13px;
-    border: 1px solid var(--input-border);
-    border-radius: var(--border-radius-small);
-    background-color: var(--input-bg);
-    color: var(--text-color-secondary);
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
