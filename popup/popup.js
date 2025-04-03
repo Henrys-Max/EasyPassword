@@ -24,7 +24,7 @@ async function initializeApp() {
         const loadScriptsPromise = loadScripts();
         const timeoutPromise = new Promise((resolve) => {
             setTimeout(() => {
-                console.warn('脚本加载超时，继续执行');
+                console.debug('继续初始化中，请稍候...');
                 resolve('timeout');
             }, 5000); // 5秒超时
         });
@@ -32,9 +32,9 @@ async function initializeApp() {
         // 使用Promise.race确保不会无限等待
         const result = await Promise.race([loadScriptsPromise, timeoutPromise]);
         if (result === 'timeout') {
-            console.warn('使用有限功能继续初始化');
+            console.debug('正在使用备用方式加载...');
         } else {
-            console.log('所有依赖模块加载完成');
+            console.debug('初始化完成');
         }
 
         // 尝试初始化密码生成器，即使超时也继续执行
