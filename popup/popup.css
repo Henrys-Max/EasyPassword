@@ -6,7 +6,7 @@
     box-sizing: border-box;
     --border-radius-medium: 5px;  /* 中等圆角，用于一般元素 */
     --border-radius-small: 3px;   /* 小圆角，用于次要元素 */
-    --border-radius-large: 8px;   /* 大圆角，用于主要元素 */
+    --border-radius-large: 10px;   /* 大圆角，用于主要元素 */
 }
 
 /* 定义主题颜色变量 */
@@ -54,7 +54,7 @@ body {
     width: 320px;
     padding: 16px;
     background-color: var(--container-bg);
-    box-shadow: 0 2px 4px var(--shadow-color);
+
 }
 
 /* 标题区域样式 */
@@ -126,9 +126,11 @@ body {
     flex: 1;
     border: none;
     background: transparent;
-    padding: 8px;
+    padding: 6px;
     color: var(--text-color);
     font-family: monospace;
+    font-size: 16px;
+    text-align: center;
     outline: none;
 }
 
