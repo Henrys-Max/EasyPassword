@@ -226,7 +226,7 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 │   └── modules/       # 模块化组件
 │       ├── config.js  # 配置管理模块
 │       ├── init.js    # 初始化模块
-│       ├── password.js # 密码生成接口
+│       ├── password-manager.js # 密码管理模块
 │       └── ui.js      # UI交互模块
 ├── options/           # 设置页面
 │   ├── options.html   # 设置页面HTML
@@ -245,16 +245,20 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 │       ├── logo_128.png # 128x128图标
 │       ├── Renew.svg    # 刷新图标
 │       └── settings.svg # 设置图标
+├── content/           # 内容脚本目录（待开发）
 └── lib/               # 核心库
     ├── Bootstrap/     # Bootstrap样式库
     │   └── bootstrap.min.css # Bootstrap样式
-    ├── password.js    # 密码生成器类
-    ├── worker.js      # Web Worker实现
+    ├── core/          # 核心功能模块
+    │   └── password/  # 密码生成核心
+    │       ├── charset.js    # 字符集定义
+    │       ├── generator.js  # 密码生成器
+    │       ├── passwordService.js # 密码服务
+    │       ├── strength.js   # 密码强度评估
+    │       ├── utils.js      # 工具函数
+    │       └── worker.js     # Web Worker实现
     └── shared/        # 共享工具和常量
-        ├── charset.js # 字符集定义
-        ├── i18n.js    # 国际化支持
-        ├── strength.js # 密码强度评估
-        └── utils.js   # 工具函数
+        └── i18n.js    # 国际化支持
 ```
 
 
