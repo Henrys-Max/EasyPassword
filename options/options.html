@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Password 设置</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Easy Password 设置</h1>
+            <p class="subtitle">自定义您的密码管理体验</p>
+        </header>
+
+        <main>
+            <div class="settings-card">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>密码框动态识别</h3>
+                        <p>自动识别页面中的密码输入框并提供密码生成功能</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle">
+                            <input type="checkbox" id="passwordDetection" checked>
+                            <span class="slider"></span>
+                            <span class="toggle-label" id="toggleStatus">已开启</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="saveButton" class="primary-button">保存设置</button>
+                <div id="saveStatus" class="save-status"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Easy Password &copy; 2024 | <a href="#" id="privacyLink">隐私政策</a></p>
+        </footer>
+    </div>
+
+    <script src="options.js" type="module"></script>
+</body>
+</html> 

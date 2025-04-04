@@ -1,12 +1,18 @@
 /**
- * 密码生成器弹出窗口脚本 V1.1.0
+ * 密码生成器弹出窗口脚本 V1.2.0
  * 实现密码生成器的用户界面交互和状态管理
+ * 
+ * 更新说明：
+ * 1. 重构为使用新的密码服务架构
+ * 2. 优化初始化流程和错误处理
+ * 3. 提升界面响应性能
  */
 
 // 导入必要的模块
 import { loadScripts, getDOMElements } from './modules/init.js';
 import { loadSavedConfig } from './modules/config.js';
 import { initializeEventListeners } from './modules/ui.js';
+import { initializePasswordManager, generatePassword } from './modules/password-manager.js';
 
 // 全局变量
 let passwordGenerator = null;
@@ -34,11 +40,11 @@ async function initializeApp() {
         if (result === 'timeout') {
             console.debug('正在使用备用方式加载...');
         } else {
-            console.debug('初始化完成');
+            console.debug('基础脚本加载完成');
         }
 
-        // 尝试初始化密码生成器，即使超时也继续执行
-        passwordGenerator = window.passwordGenerator;
+        // 初始化密码管理模块
+        initializePasswordManager();
         
         // 初始化DOM元素
         const domElements = getDOMElements();
@@ -48,6 +54,11 @@ async function initializeApp() {
 
         // 加载保存的配置
         loadSavedConfig();
+        
+        // 生成初始密码
+        setTimeout(() => {
+            generatePassword();
+        }, 100);
 
     } catch (error) {
         console.error('初始化失败:', error);

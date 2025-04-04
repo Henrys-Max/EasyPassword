@@ -1,175 +1,138 @@
 /**
- * UI交互模块
- * 负责处理界面更新和动画效果
+ * UI交互模块 V1.2.0
+ * 负责处理界面交互和事件监听
+ * 
+ * 更新说明：
+ * 1. 集成新的密码管理模块
+ * 2. 优化事件监听和错误处理
+ * 3. 改进UI交互体验
  */
 
 import { getDOMElements } from './init.js';
-import { generatePassword, showSecurityWarning } from './password.js';
-import { saveConfig, toggleConfigPanel } from './config.js';
-
-// 定时器变量
-let copyButtonTimer;
-
-// 复制密码到剪贴板
-export const copyPassword = async () => {
-    const { passwordOutput, copyButton } = getDOMElements();
-    const password = passwordOutput.value;
-    
-    if (!password || 
-        password === '生成密码失败' || 
-        password === '密码生成器初始化失败' || 
-        password === '正在生成密码...' || 
-        password === '正在初始化密码生成器...') {
-        return;
-    }
-
-    try {
-        await navigator.clipboard.writeText(password);
-        const originalText = window.i18n.getTranslation('copy');
-        
-        // 清除之前的定时器并重置按钮状态
-        if (copyButtonTimer) {
-            clearTimeout(copyButtonTimer);
-            copyButton.textContent = originalText;
-            copyButton.classList.remove('success', 'error');
-        }
-        
-        // 使用i18n获取当前语言的提示文本
-        copyButton.textContent = window.i18n.getTranslation('copied');
-        copyButton.classList.add('success');
-        
-        // 保存新的定时器引用
-        copyButtonTimer = setTimeout(() => {
-            copyButton.textContent = originalText;
-            copyButton.classList.remove('success');
-        }, 1000);
-    } catch (err) {
-        console.error('复制失败:', err);
-        const originalText = window.i18n.getTranslation('copy');
-        
-        // 清除之前的定时器并重置按钮状态
-        if (copyButtonTimer) {
-            clearTimeout(copyButtonTimer);
-            copyButton.textContent = originalText;
-            copyButton.classList.remove('success', 'error');
-        }
-        
-        // 使用i18n获取当前语言的失败提示文本
-        copyButton.textContent = window.i18n.getTranslation('copyFailed');
-        copyButton.classList.add('error');
-        
-        // 保存新的定时器引用
-        copyButtonTimer = setTimeout(() => {
-            copyButton.textContent = originalText;
-            copyButton.classList.remove('error');
-        }, 1000);
-    }
-};
+import { saveConfig } from './config.js';
+import { generatePassword, showSecurityWarning } from './password-manager.js';
 
 // 初始化事件监听器
 export const initializeEventListeners = () => {
-    const { 
-        copyButton, 
-        refreshButton,
-        passwordLength,
-        lengthValue,
-        includeNumbers,
-        includeSymbols
-    } = getDOMElements();
+    try {
+        const { 
+            copyButton, 
+            refreshButton, 
+            passwordLength, 
+            lengthValue,
+            includeNumbers,
+            includeSymbols,
+            passwordType
+        } = getDOMElements();
 
-    // 复制按钮点击事件
-    if (copyButton) {
-        copyButton.addEventListener('click', copyPassword);
+        // 复制按钮事件监听
+        copyButton.addEventListener('click', handleCopyPassword);
+        
+        // 刷新按钮事件监听
+        refreshButton.addEventListener('click', handleRefreshPassword);
+        
+        // 密码长度滑块事件监听
+        passwordLength.addEventListener('input', handlePasswordLengthChange);
+        
+        // 选项更改事件监听
+        includeNumbers.addEventListener('change', handleOptionChange);
+        includeSymbols.addEventListener('change', handleOptionChange);
+        
+        // 密码类型切换事件监听
+        const passwordTypeRadios = document.querySelectorAll('input[name="passwordType"]');
+        passwordTypeRadios.forEach(radio => {
+            radio.addEventListener('change', handlePasswordTypeChange);
+        });
+        
+        // 为易记密码选项添加事件监听
+        const memorableOptions = document.querySelectorAll('#memorableOptions input, #memorableOptions select');
+        memorableOptions.forEach(option => {
+            option.addEventListener('change', handleOptionChange);
+        });
+        
+        // 初始根据当前密码类型显示相应选项
+        handlePasswordTypeChange({ target: passwordType });
+        
+        console.log('事件监听器初始化成功');
+    } catch (error) {
+        console.error('初始化事件监听器失败:', error);
     }
+};
 
-    // 刷新按钮点击事件
-    if (refreshButton) {
-        refreshButton.addEventListener('click', () => {
-            const refreshIcon = refreshButton.querySelector('.refresh-icon');
-            if (refreshIcon) {
-                refreshIcon.classList.add('rotate');
-                setTimeout(() => {
-                    refreshIcon.classList.remove('rotate');
-                }, 500);
-            }
-            generatePassword();
-        });
+// 处理密码复制按钮点击
+const handleCopyPassword = () => {
+    const { passwordOutput, copyButton } = getDOMElements();
+    
+    // 验证密码不为空且不是错误状态
+    if (!passwordOutput.value || 
+        passwordOutput.value.includes('初始化') || 
+        passwordOutput.value.includes('失败') || 
+        passwordOutput.value.includes('生成中')) {
+        showSecurityWarning(true, '无法复制：密码无效');
+        return;
     }
-
-    // 密码类型变更事件
-    document.querySelectorAll('input[name="passwordType"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            if(this.checked) {
-                // 直接使用radio按钮的value值
-                toggleConfigPanel(this.value);
-                generatePassword();
-                saveConfig();
-            }
-        });
-    });
-
-    // 密码长度变更事件
-    if (passwordLength && lengthValue) {
-        passwordLength.addEventListener('input', (e) => {
-            lengthValue.textContent = e.target.value;
-            generatePassword();
-            saveConfig();
-        });
+    
+    try {
+        // 复制到剪贴板
+        passwordOutput.select();
+        document.execCommand('copy');
+        
+        // 更新按钮文本指示
+        const originalText = copyButton.textContent;
+        copyButton.textContent = window.i18n.getTranslation('copied');
+        
+        // 显示成功提示
+        showSecurityWarning(true, window.i18n.getTranslation('copiedToClipboard'));
+        
+        // 重置按钮文本
+        setTimeout(() => {
+            copyButton.textContent = originalText;
+        }, 2000);
+    } catch (error) {
+        console.error('复制密码失败:', error);
+        showSecurityWarning(true, window.i18n.getTranslation('copyFailed'));
     }
+};
 
-    // 数字选项变更事件
-    if (includeNumbers && includeSymbols) {
-        includeNumbers.addEventListener('change', (e) => {
-            // 检查是否尝试同时关闭数字和符号
-            if (!e.target.checked && !includeSymbols.checked) {
-                e.target.checked = true;
-                showSecurityWarning(true);
-                return;
-            }
-            showSecurityWarning(false);
-            generatePassword();
-            saveConfig();
-        });
+// 处理刷新密码按钮点击
+const handleRefreshPassword = () => {
+    generatePassword();
+};
 
-        // 符号选项变更事件
-        includeSymbols.addEventListener('change', (e) => {
-            // 检查是否尝试同时关闭数字和符号
-            if (!e.target.checked && !includeNumbers.checked) {
-                e.target.checked = true;
-                showSecurityWarning(true);
-                return;
-            }
-            showSecurityWarning(false);
-            generatePassword();
-            saveConfig();
-        });
+// 处理密码长度变化
+const handlePasswordLengthChange = (event) => {
+    const { lengthValue } = getDOMElements();
+    // 更新长度值显示
+    lengthValue.textContent = event.target.value;
+    // 更新配置
+    saveConfig();
+    // 生成新密码
+    generatePassword();
+};
+
+// 处理密码选项更改
+const handleOptionChange = () => {
+    // 保存新配置
+    saveConfig();
+    // 生成新密码
+    generatePassword();
+};
+
+// 处理密码类型切换
+const handlePasswordTypeChange = (event) => {
+    const randomOptions = document.getElementById('randomOptions');
+    const memorableOptions = document.getElementById('memorableOptions');
+    
+    if (event.target.value === 'memorable') {
+        randomOptions.style.display = 'none';
+        memorableOptions.style.display = 'block';
+    } else {
+        randomOptions.style.display = 'block';
+        memorableOptions.style.display = 'none';
     }
-
-    // 易记密码配置变更事件
-    const wordCount = document.getElementById('wordCount');
-    const wordCountValue = document.getElementById('wordCountValue');
-    const separator = document.getElementById('separator');
-    const capitalizeFirst = document.getElementById('capitalizeFirst');
-
-    if (wordCount && wordCountValue) {
-        wordCount.addEventListener('input', (e) => {
-            wordCountValue.textContent = e.target.value;
-            generatePassword();
-            saveConfig();
-        });
-    }
-
-    if (separator) {
-        separator.addEventListener('change', () => {
-            generatePassword();
-            saveConfig();
-        });
-    }
-
-    if (capitalizeFirst) {
-        capitalizeFirst.addEventListener('change', () => {
-            generatePassword();
-            saveConfig();
-        });
-    }
+    
+    // 保存新配置
+    saveConfig();
+    // 生成新密码
+    generatePassword();
 };

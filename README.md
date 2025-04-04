@@ -183,15 +183,22 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
   - Flexbox布局
   - CSS变量
   - 过渡动画
+  - Bootstrap样式库支持
 - JavaScript (ES6+)：使用现代JavaScript特性
   - 类和模块化设计
   - Promise异步处理
   - 箭头函数
+  - ES模块系统（import/export）
   - Web Crypto API用于安全随机数生成
   - Web Worker API用于性能优化
+- 国际化支持：
+  - 多语言资源管理
+  - 动态语言切换
+  - 自动检测浏览器语言设置
 - Chrome Extension API：
   - storage.sync API用于配置持久化
   - runtime API用于扩展生命周期管理
+  - clipboardWrite API用于密码复制功能
 
 ### 核心技术实现
 - 密码生成系统
@@ -211,45 +218,45 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 
 ### 项目结构
 ```
-├── manifest.json        # 扩展配置文件
+├── manifest.json        # 扩展配置文件（V1.1.4）
 ├── popup/              # 弹出窗口相关文件
 │   ├── popup.html     # 弹出窗口HTML
 │   ├── popup.css      # 弹出窗口样式
-│   └── popup.js       # 弹出窗口逻辑
+│   ├── popup.js       # 弹出窗口主逻辑
+│   └── modules/       # 模块化组件
+│       ├── config.js  # 配置管理模块
+│       ├── init.js    # 初始化模块
+│       ├── password.js # 密码生成接口
+│       └── ui.js      # UI交互模块
+├── options/           # 设置页面
+│   ├── options.html   # 设置页面HTML
+│   ├── options.css    # 设置页面样式
+│   └── options.js     # 设置页面逻辑
+├── _locales/          # 国际化资源
+│   ├── en_US/         # 英文语言包
+│   │   └── messages.json # 英文翻译
+│   └── zh_CN/         # 中文语言包
+│       └── messages.json # 中文翻译
 ├── assets/            # 静态资源
 │   └── icons/         # 图标文件
-└── lib/               # 工具库
-    ├── password.js    # 密码生成核心逻辑
+│       ├── logo_16.png  # 16x16图标
+│       ├── logo_32.png  # 32x32图标
+│       ├── logo_48.png  # 48x48图标
+│       ├── logo_128.png # 128x128图标
+│       ├── Renew.svg    # 刷新图标
+│       └── settings.svg # 设置图标
+└── lib/               # 核心库
+    ├── Bootstrap/     # Bootstrap样式库
+    │   └── bootstrap.min.css # Bootstrap样式
+    ├── password.js    # 密码生成器类
     ├── worker.js      # Web Worker实现
     └── shared/        # 共享工具和常量
         ├── charset.js # 字符集定义
+        ├── i18n.js    # 国际化支持
+        ├── strength.js # 密码强度评估
         └── utils.js   # 工具函数
 ```
 
-## 开发计划
-
-### 第一阶段：基础框架搭建
-1. 创建项目基础结构
-2. 配置manifest.json
-3. 实现基本UI界面
-
-### 第二阶段：核心功能实现
-1. 实现密码生成算法
-2. 添加字符过滤功能
-3. 实现密码类型切换
-4. 开发长度调节功能
-5. 添加字符类型控制
-
-### 第三阶段：优化和测试
-1. UI/UX优化
-2. 代码重构和优化
-3. 单元测试
-4. 用户测试
-
-### 第四阶段：发布和维护
-1. 打包和发布
-2. 收集用户反馈
-3. 持续更新和维护
 
 ## 安装使用
 

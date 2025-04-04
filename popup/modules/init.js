@@ -1,6 +1,11 @@
 /**
- * 初始化模块
+ * 初始化模块 V1.2.0
  * 负责DOM元素的初始化和事件监听器的设置
+ * 
+ * 更新说明：
+ * 1. 重构为使用新的密码服务架构
+ * 2. 优化脚本加载流程
+ * 3. 改进错误处理机制
  */
 
 // DOM元素声明
@@ -27,35 +32,17 @@ export const loadScripts = () => {
             });
         };
 
-        // 预加载所有脚本，避免串行加载导致的延迟
-        const charsetPromise = loadScript('../lib/shared/charset.js');
-        const utilsPromise = loadScript('../lib/shared/utils.js');
-        const strengthPromise = loadScript('../lib/shared/strength.js');
-        
-        // 等待基础模块加载完成后再加载密码生成器
-        Promise.all([charsetPromise, utilsPromise, strengthPromise])
-            .then(() => loadScript('../lib/password.js'))
+        // 加载国际化支持模块
+        loadScript('../lib/shared/i18n.js')
             .then(() => {
-                // 设置最大等待时间，避免无限等待
-                let attempts = 0;
-                const maxAttempts = 50; // 最多等待5秒
-                
-                const checkGenerator = () => {
-                    if (window.passwordGenerator) {
-                        console.log('密码生成器初始化成功');
-                        resolve();
-                    } else if (attempts < maxAttempts) {
-                        attempts++;
-                        setTimeout(checkGenerator, 100);
-                    } else {
-                        // 超时后仍然继续，但记录错误
-                        console.warn('密码生成器初始化超时，继续执行');
-                        resolve();
-                    }
-                };
-                checkGenerator();
+                console.log('国际化模块加载成功');
+                resolve();
             })
-            .catch(reject);
+            .catch(error => {
+                console.error('加载国际化模块失败:', error);
+                // 即使国际化模块加载失败，也继续执行其他功能
+                resolve();
+            });
     });
 };
 

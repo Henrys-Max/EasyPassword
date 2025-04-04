@@ -10,13 +10,17 @@
     "128": "assets/icons/logo_128.png"
   },
   "action": {
+    "default_popup": "popup/popup.html",
     "default_icon": {
       "16": "assets/icons/logo_16.png",
       "48": "assets/icons/logo_48.png",
       "128": "assets/icons/logo_128.png"
     },
-    "default_title": "EasyPassword",
-    "default_popup": "popup/popup.html"
+    "default_title": "EasyPassword"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
   },
   "permissions": [
     "clipboardWrite",
