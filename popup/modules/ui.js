@@ -45,7 +45,17 @@ export const initializeEventListeners = () => {
         });
         
         // 为易记密码选项添加事件监听
-        const memorableOptions = document.querySelectorAll('#memorableOptions input, #memorableOptions select');
+        const wordCount = document.getElementById('wordCount');
+        const wordCountValue = document.getElementById('wordCountValue');
+        if (wordCount && wordCountValue) {
+            wordCount.addEventListener('input', (event) => {
+                wordCountValue.textContent = event.target.value;
+                handleOptionChange();
+            });
+        }
+
+        // 为其他易记密码选项添加事件监听
+        const memorableOptions = document.querySelectorAll('#memorableOptions select, #memorableOptions input[type="checkbox"]');
         memorableOptions.forEach(option => {
             option.addEventListener('change', handleOptionChange);
         });
