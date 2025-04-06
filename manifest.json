@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Easy Password",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "default_locale": "zh_CN",
   "description": "__MSG_appDescription__",
   "icons": {
@@ -27,9 +27,21 @@
     "storage"
   ],
   "web_accessible_resources": [{
-    "resources": ["lib/*.js"],
+    "resources": [
+      "content/js/modules/*.js",
+      "content/css/*.css",
+      "assets/icons/*.png"
+    ],
     "matches": ["<all_urls>"]
   }],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/js/content-script.js"],
+      "css": ["content/css/floating-panel.css"],
+      "run_at": "document_idle"
+    }
+  ],
   "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
   }

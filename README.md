@@ -21,6 +21,21 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
   - 开发过期密码检测系统，自动扫描已保存密码的强度变化，提供一键更新建议并保留历史版本记录
 
 ## 版本历史
+### V1.1.5
+- 新增密码快速填充浮窗功能
+  - 自动识别网页中的密码输入框
+  - 在密码框被选中时弹出简洁的浮窗
+  - 浮窗中提供快速生成密码和一键填充功能
+  - 支持密码强度实时可视化展示
+  - 自动识别并填充确认密码字段
+  - 支持浅色/深色主题自适应
+  - 智能适配不同网站的密码框布局
+- 技术优化
+  - 重构内容脚本架构，提高模块化和复用性
+  - 添加MutationObserver监控DOM变化，优化密码框检测
+  - 实现配置同步，与popup设置同步
+  - 提升页面交互性能
+
 ### V1.1.4
 - 深色/浅色主题支持
   - 实现自动适配浏览器外观模式
@@ -174,6 +189,7 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 - 优雅的动画效果，提供流畅的交互体验
 - 自动保存用户配置，下次使用时自动加载
 - 密码强度实时评估和反馈
+- 快速填充浮窗，便捷填写网站密码
 
 ## 技术架构
 
@@ -191,6 +207,7 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
   - ES模块系统（import/export）
   - Web Crypto API用于安全随机数生成
   - Web Worker API用于性能优化
+  - MutationObserver API用于DOM变化监控
 - 国际化支持：
   - 多语言资源管理
   - 动态语言切换
@@ -215,10 +232,14 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
   - 动态权重的熵值计算系统
   - 智能字符分布算法
   - 多重密码强度验证
+- 网页交互增强
+  - MutationObserver监控DOM变化
+  - 智能检测和交互响应
+  - 动态浮窗定位系统
 
 ### 项目结构
 ```
-├── manifest.json        # 扩展配置文件（V1.1.4）
+├── manifest.json        # 扩展配置文件（V1.1.5）
 ├── popup/              # 弹出窗口相关文件
 │   ├── popup.html     # 弹出窗口HTML
 │   ├── popup.css      # 弹出窗口样式
@@ -228,6 +249,16 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 │       ├── init.js    # 初始化模块
 │       ├── password-manager.js # 密码管理模块
 │       └── ui.js      # UI交互模块
+├── content/           # 内容脚本目录
+│   ├── css/          # 内容脚本样式
+│   │   └── floating-panel.css # 浮窗样式
+│   └── js/           # 内容脚本JavaScript
+│       ├── content-script.js # 主内容脚本
+│       └── modules/  # 内容脚本模块
+│           ├── dom-utils.js # DOM操作工具模块
+│           ├── floating-panel.js # 浮窗UI实现模块
+│           ├── password-detector.js # 密码框检测模块
+│           └── password-service-adapter.js # 密码服务适配器
 ├── options/           # 设置页面
 │   ├── options.html   # 设置页面HTML
 │   ├── options.css    # 设置页面样式
@@ -245,7 +276,6 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 │       ├── logo_128.png # 128x128图标
 │       ├── Renew.svg    # 刷新图标
 │       └── settings.svg # 设置图标
-├── content/           # 内容脚本目录（待开发）
 └── lib/               # 核心库
     ├── Bootstrap/     # Bootstrap样式库
     │   └── bootstrap.min.css # Bootstrap样式
