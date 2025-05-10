@@ -13,9 +13,10 @@ import { loadScripts, getDOMElements } from './modules/init.js';
 import { loadSavedConfig } from './modules/config.js';
 import { initializeEventListeners } from './modules/ui.js';
 import { initializePasswordManager, generatePassword } from './modules/password-manager.js';
+import passwordService from '../lib/core/password/passwordService.js';
 
 // 全局变量
-let passwordGenerator = null;
+let isInitialized = false;
 
 // 初始化应用
 async function initializeApp() {
@@ -55,9 +56,13 @@ async function initializeApp() {
         // 加载保存的配置
         loadSavedConfig();
         
+        // 注册应用级别的密码服务错误处理
+        setupGlobalErrorHandling();
+        
         // 生成初始密码
         setTimeout(() => {
             generatePassword();
+            isInitialized = true;
         }, 100);
 
     } catch (error) {
@@ -88,6 +93,38 @@ async function initializeApp() {
             }, 1000);
         }
     }
+}
+
+/**
+ * 设置全局错误处理
+ * 处理密码服务的错误和其他全局错误
+ */
+function setupGlobalErrorHandling() {
+    // 监听全局未捕获的错误
+    window.addEventListener('error', (event) => {
+        console.error('全局错误:', event.error);
+        
+        const passwordOutput = document.getElementById('passwordOutput');
+        if (passwordOutput && !isInitialized) {
+            passwordOutput.value = '出现错误：' + (event.error?.message || '未知错误');
+        }
+        
+        // 显示错误通知
+        const securityWarning = document.getElementById('securityWarning');
+        if (securityWarning) {
+            securityWarning.textContent = '发生错误: ' + (event.error?.message || '未知错误');
+            securityWarning.classList.add('show');
+            setTimeout(() => {
+                securityWarning.classList.remove('show');
+            }, 3000);
+        }
+    });
+    
+    // 密码服务错误监听
+    passwordService.onPasswordError((message) => {
+        console.error('密码服务错误:', message);
+        // 全局错误处理已经在password-manager.js中实现
+    });
 }
 
 // 导出公共接口

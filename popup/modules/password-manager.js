@@ -22,6 +22,7 @@ export const initializePasswordManager = () => {
         const { passwordOutput } = getDOMElements();
         if (passwordOutput) {
             passwordOutput.value = password;
+            // 更新密码强度UI
             updatePasswordStrengthUI(strengthResult);
         }
     });
@@ -31,7 +32,13 @@ export const initializePasswordManager = () => {
         const { passwordOutput } = getDOMElements();
         if (passwordOutput) {
             passwordOutput.value = '生成失败: ' + message;
+            showSecurityWarning(true, `密码生成失败: ${message}`);
         }
+    });
+    
+    // 注册强度评估回调
+    passwordService.onStrengthEvaluated((strengthResult) => {
+        updatePasswordStrengthUI(strengthResult);
     });
     
     isInitialized = true;
@@ -86,15 +93,17 @@ export const generatePassword = () => {
                 capitalizeFirst: capitalizeFirst ? capitalizeFirst.checked : true
             };
             
+            // 使用密码服务生成易记密码
             passwordService.generateMemorablePassword(memorableOptions);
         } else {
-            // 生成随机密码
+            // 使用密码服务生成随机密码
             passwordService.generateRandomPassword(safeLength, useNumbers, useSymbols);
         }
 
     } catch (error) {
         console.error('密码生成过程出错:', error);
         passwordOutput.value = '生成失败，请重试...';
+        showSecurityWarning(true, '密码生成失败，请重试');
     }
 };
 
@@ -136,7 +145,16 @@ export const updatePasswordStrengthUI = (strengthResult) => {
         segment.classList.remove('active');
         if (index < activeSegments) {
             segment.classList.add('active');
-            segment.style.backgroundColor = '#3872e0';
+            // 根据强度级别设置不同颜色
+            if (activeSegments === 1) {
+                segment.style.backgroundColor = '#e74c3c'; // 红色 - 弱
+            } else if (activeSegments === 2) {
+                segment.style.backgroundColor = '#f39c12'; // 橙色 - 一般
+            } else if (activeSegments === 3) {
+                segment.style.backgroundColor = '#2ecc71'; // 绿色 - 强
+            } else {
+                segment.style.backgroundColor = '#27ae60'; // 深绿色 - 非常强
+            }
         } else {
             segment.style.backgroundColor = '#ccc';
         }
@@ -145,6 +163,11 @@ export const updatePasswordStrengthUI = (strengthResult) => {
     // 更新强度标签
     strengthLabel.querySelector('.entropy').textContent = `${window.i18n.getTranslation('entropy')}: ${Math.round(strengthResult.entropy)} bits`;
     strengthLabel.querySelector('.level').textContent = window.i18n.getTranslation(strengthResult.level.label);
+    
+    // 显示任何相关安全提示
+    if (strengthResult.warnings && strengthResult.warnings.length > 0) {
+        showSecurityWarning(true, strengthResult.warnings[0]);
+    }
 };
 
 /**
@@ -179,7 +202,7 @@ export const showSecurityWarning = (show, message = null) => {
             window.securityWarningTimer = setTimeout(() => {
                 securityWarning.classList.remove('show');
                 window.securityWarningTimer = null;
-            }, 3000);
+            }, 2000);
         } else {
             securityWarning.classList.remove('show');
         }

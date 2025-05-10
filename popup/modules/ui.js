@@ -10,7 +10,8 @@
 
 import { getDOMElements } from './init.js';
 import { saveConfig } from './config.js';
-import { generatePassword, showSecurityWarning } from './password-manager.js';
+import { generatePassword, showSecurityWarning, evaluatePasswordStrength } from './password-manager.js';
+import passwordService from '../../lib/core/password/passwordService.js';
 
 // 初始化事件监听器
 export const initializeEventListeners = () => {
@@ -22,7 +23,8 @@ export const initializeEventListeners = () => {
             lengthValue,
             includeNumbers,
             includeSymbols,
-            passwordType
+            passwordType,
+            passwordOutput
         } = getDOMElements();
 
         // 复制按钮事件监听
@@ -60,13 +62,53 @@ export const initializeEventListeners = () => {
             option.addEventListener('change', handleOptionChange);
         });
         
+        // 当用户手动编辑密码时，实时评估强度
+        if (passwordOutput) {
+            passwordOutput.addEventListener('input', handleManualPasswordChange);
+        }
+        
         // 初始根据当前密码类型显示相应选项
         handlePasswordTypeChange({ target: passwordType });
+        
+        // 注册密码服务事件，使UI能够响应密码状态变化
+        setupPasswordServiceEvents();
         
         console.log('事件监听器初始化成功');
     } catch (error) {
         console.error('初始化事件监听器失败:', error);
     }
+};
+
+/**
+ * 设置密码服务事件监听
+ * 确保UI能够实时响应密码状态变化
+ */
+const setupPasswordServiceEvents = () => {
+    // 密码生成成功时更新界面状态
+    passwordService.onPasswordGenerated((password, strengthResult) => {
+        // 启用复制按钮
+        const { copyButton } = getDOMElements();
+        if (copyButton) {
+            copyButton.disabled = false;
+        }
+    });
+    
+    // 密码生成错误时更新界面状态
+    passwordService.onPasswordError((message) => {
+        // 禁用复制按钮
+        const { copyButton } = getDOMElements();
+        if (copyButton) {
+            copyButton.disabled = true;
+        }
+    });
+    
+    // 强度评估时更新界面状态
+    passwordService.onStrengthEvaluated((strengthResult) => {
+        // 根据强度结果更新安全提示
+        if (strengthResult.score < 50) {
+            showSecurityWarning(true, '密码较弱，建议增加长度');
+        }
+    });
 };
 
 // 处理密码复制按钮点击
@@ -118,6 +160,18 @@ const handlePasswordLengthChange = (event) => {
     saveConfig();
     // 生成新密码
     generatePassword();
+};
+
+/**
+ * 处理用户手动编辑密码
+ */
+const handleManualPasswordChange = (event) => {
+    const password = event.target.value;
+    // 仅在密码长度大于0时评估
+    if (password && password.length > 0) {
+        // 使用密码服务评估密码强度
+        evaluatePasswordStrength(password);
+    }
 };
 
 // 处理密码选项更改
