@@ -1,132 +1,96 @@
 <!DOCTYPE html>
 <html lang="en_US">
 <head>
-    <!-- 设置文档编码和视口 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 页面标题 -->
     <title>EasyPassword - 密码生成器</title>
-    <!-- 引入Bootstrap CSS -->
-    <link href="../lib/Bootstrap/bootstrap.min.css" rel="stylesheet">
-    <!-- 引入外部样式表 -->
     <link rel="stylesheet" href="popup.css">
-    <!-- 引入国际化模块 -->
     <script type="module" src="../lib/shared/i18n.js"></script>
-    <!-- 引入popup脚本 -->
     <script type="module" src="popup.js"></script>
 </head>
 <body>
-    <!-- 主容器：包含所有UI组件 -->
     <div class="container">
-        <!-- 标题区域：显示应用名称和描述 -->
         <header class="header">
-            <div class="title-container">
-                <div class="app-title">
-                    <h1 data-i18n="appName">EasyPassword</h1>
-                    <a href="../options/options.html" class="settings-icon" target="_blank">
-                        <img src="../assets/icons/settings.svg" alt="设置">
-                    </a>
-                </div>
-            </div>
-            <p data-i18n="appDescription">安全且易记的密码生成器</p>
+            <h1 class="header-title">EasyPassword</h1>
+            <!--
+            <button class="header-settings-btn" title="设置">
+                <img src="../assets/icons/settings.svg" alt="设置">
+            </button>
+            -->
         </header>
 
-        <!-- 密码显示区域：展示生成的密码和操作按钮 -->
         <div class="password-display">
-            <!-- 密码输入组：包含密码显示框 -->
             <div class="password-input-group">
-                <!-- 只读输入框：显示生成的密码 -->
                 <input type="text" id="passwordOutput" readonly>
             </div>
 
-            <!-- 密码强度指示器：实时显示密码强度评估结果 -->
             <div class="strength-meter">
-                <!-- 强度指示条：通过不同颜色和段数展示密码强度 -->
                 <div class="strength-segments">
                     <div class="strength-segment" data-level="very-weak"></div>
                     <div class="strength-segment" data-level="medium"></div>
                     <div class="strength-segment" data-level="strong"></div>
                     <div class="strength-segment" data-level="very-strong"></div>
                 </div>
-                <!-- 强度标签：显示密码熵值和强度等级 -->
                 <div class="strength-label" id="strengthLabel">
                     <span class="entropy"></span>
                     <span class="level"></span>
                 </div>
             </div>
 
-            <!-- 按钮组：包含刷新和复制按钮 -->
             <div class="button-group">
-                <!-- 刷新按钮：点击生成新密码 -->
                 <button id="refreshButton" class="icon-button" data-i18n-title="refreshTooltip">
                     <img src="../assets/icons/Renew.svg" alt="刷新" class="refresh-icon">
                 </button>
-                <!-- 复制按钮：点击复制密码到剪贴板 -->
                 <button id="copyButton" data-i18n-title="copyTooltip" data-i18n="copy"></button>
             </div>                
         </div>
 
-        <!-- 密码选项配置区域：用于自定义密码生成规则 -->
         <div class="password-options">
-            <!-- 密码类型选择：选择密码生成方式 -->
             <div class="option-group">
                 <label data-i18n="passwordType">类型</label>
-                <div class="btn-group" role="group" aria-label="密码类型选择">
-                    <input type="radio" class="btn-check" name="passwordType" id="randomType" value="random" checked>
-                    <label class="btn btn-outline-primary" for="randomType" data-i18n="randomPassword"></label>
+                <div class="password-type-group">
+                    <input type="radio" name="passwordType" id="randomType" value="random" checked>
+                    <label for="randomType" data-i18n="randomPassword"></label>
                     
-                    <input type="radio" class="btn-check" name="passwordType" id="memorableType" value="memorable">
-                    <label class="btn btn-outline-primary" for="memorableType" data-i18n="memorablePassword"></label>
+                    <input type="radio" name="passwordType" id="memorableType" value="memorable">
+                    <label for="memorableType" data-i18n="memorablePassword"></label>
                 </div>
             </div>
 
-            <!-- 随机密码配置面板 -->
             <div id="randomOptions" class="random-options">
-                <!-- 密码长度控制：调整密码的字符长度 -->
                 <div class="option-group">
                     <label data-i18n="passwordLength"></label>
-                    <!-- 滑动条包装器：包含滑动条和数值显示 -->
                     <div class="slider-wrapper">
-                        <!-- 范围滑动条：使用Bootstrap的range组件 -->
-                        <input type="range" class="form-range custom-range" id="passwordLength" min="8" max="26" value="15">
-                        <!-- 长度数值显示 -->
-                        <span id="lengthValue" class="ms-2">15</span>
+                        <input type="range" class="custom-range" id="passwordLength" min="8" max="26" value="15">
+                        <span id="lengthValue" class="range-value">15</span>
                     </div>
                 </div>
-                <!-- 字符类型控制：选择密码中包含的字符类型 -->
-                <!-- 数字开关组 -->
                 <div class="option-group">
                     <label data-i18n="includeNumbers"></label>
-                    <!-- 数字切换开关：使用Bootstrap的form-switch组件 -->
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="includeNumbers" checked>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="includeNumbers" checked>
                     </div>
                 </div>
-                <!-- 符号开关组 -->
                 <div class="option-group">
                     <label data-i18n="includeSymbols"></label>
-                    <!-- 符号切换开关：使用Bootstrap的form-switch组件 -->
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="includeSymbols">
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="includeSymbols">
                     </div>
                 </div>
             </div>
 
-            <!-- 易记密码配置面板 -->
             <div id="memorableOptions" class="memorable-options" style="display: none;">
-                <!-- 单词数量控制 -->
                 <div class="option-group">
                     <label data-i18n="wordCount">单词数量</label>
                     <div class="slider-wrapper">
-                        <input type="range" class="form-range custom-range" id="wordCount" min="2" max="5" value="3">
-                        <span id="wordCountValue" class="ms-2">3</span>
+                        <input type="range" class="custom-range" id="wordCount" min="2" max="5" value="3">
+                        <span id="wordCountValue" class="range-value">3</span>
                     </div>
                 </div>
 
-                <!-- 分隔符选择 -->
                 <div class="option-group">
                     <label data-i18n="separator">分隔符</label>
-                    <select class="form-select" id="separator">
+                    <select class="custom-select" id="separator">
                         <option value="-" data-i18n="separatorHyphen">连字符 (-)</option>
                         <option value="_" data-i18n="separatorUnderscore">下划线 (_)</option>
                         <option value="?" data-i18n="separatorQuestion">问号 (?)</option>
@@ -135,16 +99,14 @@
                     </select>
                 </div>
 
-                <!-- 首字母大小写控制 -->
                 <div class="option-group">
                     <label data-i18n="capitalizeFirst">首字母大写</label>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="capitalizeFirst" checked>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="capitalizeFirst" checked>
                     </div>
                 </div>
             </div>            
         </div>
-        <!-- 安全提示信息 -->
         <div id="securityWarning" role="alert" data-i18n="securityWarning">
         </div>
     </div>

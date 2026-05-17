@@ -58,6 +58,10 @@ export const saveConfig = () => {
 
         // 使用Chrome存储API保存配置
         chrome.storage.sync.set({ passwordConfig: config }, () => {
+            if (chrome.runtime.lastError) {
+                console.error('保存配置失败:', chrome.runtime.lastError.message);
+                return;
+            }
             console.log('配置已保存', config);
         });
     } catch (error) {
@@ -69,6 +73,11 @@ export const saveConfig = () => {
 export const loadSavedConfig = () => {
     try {
         chrome.storage.sync.get('passwordConfig', (data) => {
+            if (chrome.runtime.lastError) {
+                console.error('读取配置失败:', chrome.runtime.lastError.message);
+                applyConfig(DEFAULT_CONFIG);
+                return;
+            }
             const savedConfig = data.passwordConfig || DEFAULT_CONFIG;
             console.log('加载已保存的配置', savedConfig);
             

@@ -15,37 +15,6 @@ let lengthValue, includeNumbers, includeSymbols;
 // 密码强度指示器元素
 let strengthBar, strengthLabel;
 
-// 加载依赖模块
-export const loadScripts = () => {
-    return new Promise((resolve, reject) => {
-        const loadScript = (src) => {
-            return new Promise((resolveScript, rejectScript) => {
-                const script = document.createElement('script');
-                script.src = src;
-                script.type = 'module';
-                script.onload = resolveScript;
-                script.onerror = (error) => {
-                    console.error(`加载模块失败: ${src}`, error);
-                    rejectScript(new Error(`加载模块失败: ${src}`));
-                };
-                document.head.appendChild(script);
-            });
-        };
-
-        // 加载国际化支持模块
-        loadScript('../lib/shared/i18n.js')
-            .then(() => {
-                console.log('国际化模块加载成功');
-                resolve();
-            })
-            .catch(error => {
-                console.error('加载国际化模块失败:', error);
-                // 即使国际化模块加载失败，也继续执行其他功能
-                resolve();
-            });
-    });
-};
-
 // 初始化DOM元素
 const initializeDOMElements = () => {
     try {

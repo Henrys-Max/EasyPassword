@@ -21,6 +21,26 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
   - 开发过期密码检测系统，自动扫描已保存密码的强度变化，提供一键更新建议并保留历史版本记录
 
 ## 版本历史
+### V1.1.5
+- UI 主题升级
+  - 品牌色从蓝色系全面切换为绿色系 (#038f5d / #05b872)
+  - 适配深色/浅色主题的绿色品牌色方案
+- 界面布局优化
+  - Header 从垂直居中布局改为水平左右布局
+  - 主容器增加 10px 圆角，提升视觉层次
+  - 配置区域标签字号调整为 12px
+- 按钮视觉增强
+  - 复制按钮和刷新按钮增加阴影效果
+- Bug 修复
+  - 修复配置持久化问题：消除初始化竞态条件导致配置被默认值覆盖
+  - 增加 chrome.runtime.lastError 检查和 beforeunload 兜底保存
+- 代码优化
+  - 全面清理冗余代码（删除约 80 行未使用代码）
+  - 移除无效的 loadScripts 动态加载逻辑
+  - 删除 readonly 输入框的无效事件监听
+  - 合并 password-manager.js 中的重复循环
+  - 清理未使用的 CSS 变量和规则
+
 ### V1.1.4
 - 深色/浅色主题支持
   - 实现自动适配浏览器外观模式
@@ -32,6 +52,19 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
   - 完善主题切换逻辑
   - 提升界面响应性能
   - 增强用户体验
+
+### V1.1.4
+- 前端架构重构
+  - 完全移除 Bootstrap 第三方 UI 组件库依赖
+  - 使用原生 HTML/CSS/JavaScript 重新实现所有 UI 组件
+  - 保持与原有设计系统的视觉一致性
+- 功能精简
+  - 移除独立的设置页面（options）
+  - 简化扩展程序配置结构
+- 技术优化
+  - 减少外部依赖，降低扩展体积
+  - 优化 CSS 变量管理系统
+  - 改进深色/浅色主题切换逻辑
 
 ### V1.1.3
 - 优化语言设置
@@ -184,7 +217,7 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
   - Flexbox布局
   - CSS变量
   - 过渡动画
-  - Bootstrap样式库支持
+  - 原生自定义组件（无需第三方UI库）
 - JavaScript (ES6+)：使用现代JavaScript特性
   - 类和模块化设计
   - Promise异步处理
@@ -224,7 +257,7 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 
 ### 项目结构
 ```
-├── manifest.json        # 扩展配置文件（V1.1.5）
+├── manifest.json        # 扩展配置文件（V1.1.4）
 ├── popup/              # 弹出窗口相关文件
 │   ├── popup.html     # 弹出窗口HTML
 │   ├── popup.css      # 弹出窗口样式
@@ -244,10 +277,6 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 │           ├── floating-panel.js # 浮窗UI实现模块
 │           ├── password-detector.js # 密码框检测模块
 │           └── password-service-adapter.js # 密码服务适配器
-├── options/           # 设置页面
-│   ├── options.html   # 设置页面HTML
-│   ├── options.css    # 设置页面样式
-│   └── options.js     # 设置页面逻辑
 ├── _locales/          # 国际化资源
 │   ├── en_US/         # 英文语言包
 │   │   └── messages.json # 英文翻译
@@ -262,8 +291,6 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 │       ├── Renew.svg    # 刷新图标
 │       └── settings.svg # 设置图标
 └── lib/               # 核心库
-    ├── Bootstrap/     # Bootstrap样式库
-    │   └── bootstrap.min.css # Bootstrap样式
     ├── core/          # 核心功能模块
     │   └── password/  # 密码生成核心
     │       ├── charset.js    # 字符集定义

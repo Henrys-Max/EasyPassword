@@ -9,8 +9,8 @@
  */
 
 // 导入必要的模块
-import { loadScripts, getDOMElements } from './modules/init.js';
-import { loadSavedConfig } from './modules/config.js';
+import { getDOMElements } from './modules/init.js';
+import { loadSavedConfig, saveConfig } from './modules/config.js';
 import { initializeEventListeners } from './modules/ui.js';
 import { initializePasswordManager, generatePassword } from './modules/password-manager.js';
 import passwordService from '../lib/core/password/passwordService.js';
@@ -27,34 +27,20 @@ async function initializeApp() {
     }
 
     try {
-        // 设置超时处理，确保即使脚本加载缓慢也能继续执行
-        const loadScriptsPromise = loadScripts();
-        const timeoutPromise = new Promise((resolve) => {
-            setTimeout(() => {
-                console.debug('继续初始化中，请稍候...');
-                resolve('timeout');
-            }, 5000); // 5秒超时
-        });
-
-        // 使用Promise.race确保不会无限等待
-        const result = await Promise.race([loadScriptsPromise, timeoutPromise]);
-        if (result === 'timeout') {
-            console.debug('正在使用备用方式加载...');
-        } else {
-            console.debug('基础脚本加载完成');
-        }
-
         // 初始化密码管理模块
         initializePasswordManager();
         
         // 初始化DOM元素
-        const domElements = getDOMElements();
+        getDOMElements();
 
         // 初始化事件监听器
         initializeEventListeners();
 
         // 加载保存的配置
         loadSavedConfig();
+
+        // 注册popup关闭前的兜底保存
+        window.addEventListener('beforeunload', saveConfig);
         
         // 注册应用级别的密码服务错误处理
         setupGlobalErrorHandling();

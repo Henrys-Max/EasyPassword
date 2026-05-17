@@ -121,11 +121,6 @@ export const updatePasswordStrengthUI = (strengthResult) => {
     
     // 更新强度指示器
     const segments = strengthBar.querySelectorAll('.strength-segment');
-    // 重置所有段的状态
-    segments.forEach(segment => {
-        segment.classList.remove('active');
-        segment.style.backgroundColor = '#ccc';
-    });
     
     // 根据密码强度评分确定激活的段数
     const score = strengthResult.score;
@@ -140,12 +135,9 @@ export const updatePasswordStrengthUI = (strengthResult) => {
         activeSegments = 4;
     }
 
-    // 重置并激活指示器段
+    // 根据强度级别设置各段颜色
     segments.forEach((segment, index) => {
-        segment.classList.remove('active');
         if (index < activeSegments) {
-            segment.classList.add('active');
-            // 根据强度级别设置不同颜色
             if (activeSegments === 1) {
                 segment.style.backgroundColor = '#e74c3c'; // 红色 - 弱
             } else if (activeSegments === 2) {
@@ -168,15 +160,6 @@ export const updatePasswordStrengthUI = (strengthResult) => {
     if (strengthResult.warnings && strengthResult.warnings.length > 0) {
         showSecurityWarning(true, strengthResult.warnings[0]);
     }
-};
-
-/**
- * 评估密码强度
- * @param {string} password - 待评估的密码
- * @returns {Object} 评估结果
- */
-export const evaluatePasswordStrength = (password) => {
-    return passwordService.evaluateStrength(password);
 };
 
 /**
