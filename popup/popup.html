@@ -1,17 +1,67 @@
 <!DOCTYPE html>
+<!--
+  EasyPassword 密码生成器 — 弹出窗口视图
+  ==========================================
+  本文件定义 Chrome 扩展 popup 的完整 UI 结构。
+  
+  技术栈：原生 HTML5 + CSS3（无第三方 UI 库依赖）
+  样式文件：popup.css（同级目录）
+  脚本入口：popup.js（ES Module，在同级目录）
+  国际化：lib/shared/i18n.js（通过 <script type="module"> 直接加载）
+  
+  数据流转：
+  1. popup.js → initializeApp() 初始化应用
+  2. popup/modules/init.js → getDOMElements() 获取本页面所有 DOM 引用
+  3. popup/modules/config.js → loadSavedConfig() 从 chrome.storage.sync 加载用户配置
+  4. popup/modules/ui.js → initializeEventListeners() 绑定交互事件
+  5. popup/modules/password-manager.js → 密码生成与强度评估
+-->
 <html lang="en_US">
 <head>
+    <!-- 字符编码：必须为 UTF-8 以支持中英文混合内容 -->
     <meta charset="UTF-8">
+    <!-- 视口设置：适配不同分辨率屏幕，禁止缩放保证 popup 固定尺寸 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EasyPassword - 密码生成器</title>
+    <!-- 主样式表：纯原生 CSS 实现，不依赖 Bootstrap 等第三方 UI 库 -->
     <link rel="stylesheet" href="popup.css">
+    <!--
+      国际化模块（ES Module 方式加载）
+      在 DOMContentLoaded 时自动检测浏览器语言并初始化 i18n
+      暴露 window.i18n 全局对象，提供 getTranslation / setLanguage 等方法
+    -->
     <script type="module" src="../lib/shared/i18n.js"></script>
+    <!--
+      主逻辑入口（ES Module 方式加载）
+      自动调用 initializeApp() 完成初始化流程
+    -->
     <script type="module" src="popup.js"></script>
 </head>
 <body>
+    <!--
+      ========================================
+      主容器 .container
+      ========================================
+      固定宽度 320px，是 popup 窗口的根布局容器。
+      背景色通过 CSS 变量 --container-bg 自动适配深色/浅色主题。
+      圆角 10px，提供现代化卡片外观。
+    -->
     <div class="container">
+
+        <!--
+          ========================================
+          标题区域 .header
+          ========================================
+          水平 flex 布局：左标题 + 右设置按钮（已注释）。
+          底部有 1px 分割线，padding/margin 均为 5px。
+        -->
         <header class="header">
+            <!-- 应用名称：16px、加粗、颜色跟随文本主题色 -->
             <h1 class="header-title">EasyPassword</h1>
+            <!--
+              设置按钮（暂时注释，未来可启用）
+              样式见 .header-settings-btn，图标为 assets/icons/settings.svg
+            -->
             <!--
             <button class="header-settings-btn" title="设置">
                 <img src="../assets/icons/settings.svg" alt="设置">
@@ -19,58 +69,169 @@
             -->
         </header>
 
+        <!--
+          ========================================
+          密码显示与操作区域 .password-display
+          ========================================
+          包含三部分：
+          1. 密码输出框 — 只读文本框，展示生成的密码
+          2. 强度指示器 — 4 段色条 + 熵值/等级标签
+          3. 操作按钮 — 刷新 + 复制
+        -->
         <div class="password-display">
+
+            <!-- 密码输入组：包装只读文本框 -->
             <div class="password-input-group">
+                <!--
+                  密码输出框 #passwordOutput
+                  - readonly：防止用户编辑，密码只由程序生成
+                  - 等宽字体 monospace 便于阅读密码字符
+                  - 初始值由 popup.js 在初始化时设为"正在初始化..."
+                  - 生成完成后由 password-manager.js 的 onPasswordGenerated 回调更新
+                -->
                 <input type="text" id="passwordOutput" readonly>
             </div>
 
+            <!--
+              ========================================
+              密码强度指示器 .strength-meter
+              ========================================
+              由 JS 动态更新显示，核心逻辑在：
+              popup/modules/password-manager.js → updatePasswordStrengthUI()
+              
+              评估标准：基于 NIST 标准，综合熵值、字符分布、长度等因素
+              评分映射：
+                 0-40    → 1 段亮起，红色   → 弱
+                 41-60   → 2 段亮起，橙色   → 中
+                 61-80   → 3 段亮起，绿色   → 强
+                 81-100  → 4 段亮起，深绿色 → 极强
+            -->
             <div class="strength-meter">
+                <!--
+                  强度分段指示条 .strength-segments
+                  4 个 .strength-segment 子元素，每个占 25% 宽度
+                  data-level 属性记录各段对应的等级标识（用于语义标记，非 CSS 选择器）
+                  JS 通过 style.backgroundColor 内联样式设置颜色（红/橙/绿/深绿）
+                -->
                 <div class="strength-segments">
                     <div class="strength-segment" data-level="very-weak"></div>
                     <div class="strength-segment" data-level="medium"></div>
                     <div class="strength-segment" data-level="strong"></div>
                     <div class="strength-segment" data-level="very-strong"></div>
                 </div>
+                <!--
+                  强度标签 #strengthLabel
+                  左侧 .entropy：显示熵值（如 "熵值: 85.3 bits"）
+                  右侧 .level：显示强度等级文字（如 "强" / "Strong"）
+                  文本由 i18n.getTranslation() 动态获取，支持中英文切换
+                -->
                 <div class="strength-label" id="strengthLabel">
                     <span class="entropy"></span>
                     <span class="level"></span>
                 </div>
             </div>
 
+            <!--
+              操作按钮组 .button-group
+              水平 flex 布局，gap: 10px
+            -->
             <div class="button-group">
+                <!--
+                  刷新按钮 #refreshButton
+                  - 点击触发 handleRefreshPassword() → generatePassword()
+                  - 图标：assets/icons/Renew.svg
+                  - tooltip 文本由 data-i18n-title="refreshTooltip" 控制
+                  - 点击时有 360° 旋转动画（CSS 类 .refresh-icon.rotate）
+                -->
                 <button id="refreshButton" class="icon-button" data-i18n-title="refreshTooltip">
                     <img src="../assets/icons/Renew.svg" alt="刷新" class="refresh-icon">
                 </button>
+                <!--
+                  复制按钮 #copyButton
+                  - 点击触发 handleCopyPassword() → document.execCommand('copy')
+                  - 按钮文字由 data-i18n="copy" 控制（初始为 "复制" / "Copy"）
+                  - 复制成功后文字变为 "已复制！" / "Copied!"，2 秒后恢复
+                  - 绿色背景 + 绿色投影阴影
+                  - tooltip 文本由 data-i18n-title="copyTooltip" 控制
+                -->
                 <button id="copyButton" data-i18n-title="copyTooltip" data-i18n="copy"></button>
             </div>                
         </div>
 
+        <!--
+          ========================================
+          密码选项配置区域 .password-options
+          ========================================
+          灰色背景卡片，包含密码类型切换和两种模式的配置面板。
+          所有控件的值通过 chrome.storage.sync 持久化保存。
+        -->
         <div class="password-options">
+
+            <!--
+              ── 密码类型选择 ──
+              分段单选按钮组 .password-type-group
+              使用隐藏的 <input type="radio"> + 可见的 <label> 实现
+              选中态：绿色背景 + 白色文字
+              未选中态：透明背景 + 绿色边框文字
+              
+              切换触发：handlePasswordTypeChange() 
+              → 显示/隐藏对应配置面板 + saveConfig() + generatePassword()
+            -->
             <div class="option-group">
                 <label data-i18n="passwordType">类型</label>
                 <div class="password-type-group">
+                    <!-- 随机密码：默认选中 -->
                     <input type="radio" name="passwordType" id="randomType" value="random" checked>
                     <label for="randomType" data-i18n="randomPassword"></label>
                     
+                    <!-- 易记密码：单词组合模式 -->
                     <input type="radio" name="passwordType" id="memorableType" value="memorable">
                     <label for="memorableType" data-i18n="memorablePassword"></label>
                 </div>
             </div>
 
+            <!--
+              ── 随机密码配置面板 #randomOptions ──
+              默认可见，切换到易记密码时被 JS 隐藏（style.display = 'none'）
+            -->
             <div id="randomOptions" class="random-options">
+                <!--
+                  密码长度控制
+                  - 范围：8 ~ 26
+                  - 默认：15
+                  - 拖动时触发 'input' 事件 → handlePasswordLengthChange()
+                  - 数值实时显示在右侧 .range-value 框中
+                -->
                 <div class="option-group">
                     <label data-i18n="passwordLength"></label>
                     <div class="slider-wrapper">
+                        <!--
+                          范围滑块 .custom-range
+                          样式完全自定义（无 Bootstrap 依赖）
+                          拇指颜色跟随品牌色 --brand-color（绿色系）
+                        -->
                         <input type="range" class="custom-range" id="passwordLength" min="8" max="26" value="15">
+                        <!-- 长度值实时数字显示 -->
                         <span id="lengthValue" class="range-value">15</span>
                     </div>
                 </div>
+                <!--
+                  包含数字开关
+                  - 默认开启
+                  - 切换触发 'change' 事件 → handleOptionChange()
+                  - 使用自定义 .toggle-switch 组件（纯 CSS 实现）
+                -->
                 <div class="option-group">
                     <label data-i18n="includeNumbers"></label>
                     <div class="toggle-switch">
                         <input type="checkbox" id="includeNumbers" checked>
                     </div>
                 </div>
+                <!--
+                  包含符号开关
+                  - 默认关闭
+                  - 切换触发 'change' 事件 → handleOptionChange()
+                -->
                 <div class="option-group">
                     <label data-i18n="includeSymbols"></label>
                     <div class="toggle-switch">
@@ -79,7 +240,17 @@
                 </div>
             </div>
 
+            <!--
+              ── 易记密码配置面板 #memorableOptions ──
+              默认隐藏（style="display: none"），切换到易记密码时由 JS 显示
+            -->
             <div id="memorableOptions" class="memorable-options" style="display: none;">
+                <!--
+                  单词数量控制
+                  - 范围：2 ~ 5
+                  - 默认：3
+                  - 拖动触发 → handleOptionChange()
+                -->
                 <div class="option-group">
                     <label data-i18n="wordCount">单词数量</label>
                     <div class="slider-wrapper">
@@ -88,6 +259,12 @@
                     </div>
                 </div>
 
+                <!--
+                  分隔符选择
+                  - 下拉选项：连字符(-) / 下划线(_) / 问号(?) / 句号(.) / 井号(#)
+                  - 默认：连字符(-)
+                  - 使用自定义 .custom-select 组件（纯 CSS 实现，含 SVG 箭头图标）
+                -->
                 <div class="option-group">
                     <label data-i18n="separator">分隔符</label>
                     <select class="custom-select" id="separator">
@@ -99,6 +276,11 @@
                     </select>
                 </div>
 
+                <!--
+                  首字母大写开关
+                  - 默认开启
+                  - 切换触发 → handleOptionChange()
+                -->
                 <div class="option-group">
                     <label data-i18n="capitalizeFirst">首字母大写</label>
                     <div class="toggle-switch">
@@ -107,6 +289,17 @@
                 </div>
             </div>            
         </div>
+        <!--
+          ========================================
+          安全警告信息 #securityWarning
+          ========================================
+          初始状态：隐藏（display: none, opacity: 0）
+          当安全规则触发时（如密码过弱、复制成功/失败等），JS 添加 .show 类使其显示
+          显示 2 秒后自动隐藏（由 showSecurityWarning() 中的 setTimeout 控制）
+          
+          可见样式：黄色警告背景（浅色模式 #fff3cd，深色模式 #3d3200）
+          角色属性 role="alert" 便于屏幕阅读器识别
+        -->
         <div id="securityWarning" role="alert" data-i18n="securityWarning">
         </div>
     </div>
