@@ -83,6 +83,18 @@ body {
     margin: 0;
 }
 
+.header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.header-version {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-color-muted);
+}
+
 .header-settings-btn {
     width: 32px;
     height: 32px;

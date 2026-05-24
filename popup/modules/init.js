@@ -18,15 +18,16 @@ let strengthBar, strengthLabel;
 // 初始化DOM元素
 const initializeDOMElements = () => {
     try {
-        console.log('开始初始化DOM元素...');
+        console.log('Initializing DOM elements...');
         passwordOutput = document.getElementById('passwordOutput');
         
         if (!passwordOutput) {
-            throw new Error('无法找到密码显示框元素');
+            throw new Error('Password output element not found');
         }
 
         // 立即设置初始状态
-        passwordOutput.value = '正在初始化...';
+        window.__passwordValid = false;
+        passwordOutput.value = window.t('initializing');
 
         // 初始化其他DOM元素
         copyButton = document.getElementById('copyButton');
@@ -45,7 +46,7 @@ const initializeDOMElements = () => {
         if (!copyButton || !refreshButton || !passwordType || !passwordLength || 
             !lengthValue || !includeNumbers || !includeSymbols || !strengthBar || 
             !strengthLabel) {
-            throw new Error('部分必需的DOM元素未找到');
+            throw new Error('Some required DOM elements not found');
         }
 
         return {
@@ -61,9 +62,9 @@ const initializeDOMElements = () => {
             strengthLabel
         };
     } catch (error) {
-        console.error('初始化DOM元素失败:', error);
+        console.error('DOM element initialization failed:', error);
         if (passwordOutput) {
-            passwordOutput.value = '初始化失败：' + error.message;
+            passwordOutput.value = window.t('initFailed', error.message);
         }
         throw error;
     }

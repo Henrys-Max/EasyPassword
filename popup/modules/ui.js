@@ -66,9 +66,9 @@ export const initializeEventListeners = () => {
         // 注册密码服务事件，使UI能够响应密码状态变化
         setupPasswordServiceEvents();
         
-        console.log('事件监听器初始化成功');
+        console.log('Event listeners initialized successfully');
     } catch (error) {
-        console.error('初始化事件监听器失败:', error);
+        console.error('Failed to initialize event listeners:', error);
     }
 };
 
@@ -99,7 +99,7 @@ const setupPasswordServiceEvents = () => {
     passwordService.onStrengthEvaluated((strengthResult) => {
         // 根据强度结果更新安全提示
         if (strengthResult.score < 50) {
-            showSecurityWarning(true, '密码较弱，建议增加长度');
+            showSecurityWarning(true, window.t('weakPasswordSuggestion'));
         }
     });
 };
@@ -108,12 +108,9 @@ const setupPasswordServiceEvents = () => {
 const handleCopyPassword = () => {
     const { passwordOutput, copyButton } = getDOMElements();
     
-    // 验证密码不为空且不是错误状态
-    if (!passwordOutput.value || 
-        passwordOutput.value.includes('初始化') || 
-        passwordOutput.value.includes('失败') || 
-        passwordOutput.value.includes('生成中')) {
-        showSecurityWarning(true, '无法复制：密码无效');
+    // 验证密码状态（使用状态标志替代字符串匹配，避免语言切换导致误判）
+    if (!window.__passwordValid || !passwordOutput.value) {
+        showSecurityWarning(true, window.i18n.getTranslation('copyInvalidPassword'));
         return;
     }
     
@@ -134,7 +131,7 @@ const handleCopyPassword = () => {
             copyButton.textContent = originalText;
         }, 2000);
     } catch (error) {
-        console.error('复制密码失败:', error);
+        console.error('Copy password failed:', error);
         showSecurityWarning(true, window.i18n.getTranslation('copyFailed'));
     }
 };

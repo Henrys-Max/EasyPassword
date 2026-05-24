@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en_US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyPassword</title>
+    <link rel="stylesheet" href="settings.css">
+    <script type="module" src="../lib/shared/i18n.js"></script>
+    <script type="module" src="settings.js"></script>
+</head>
+<body>
+    <div class="settings-container">
+        <!-- 左侧：设置菜单 -->
+        <aside class="settings-sidebar">
+            <nav class="settings-menu">
+                <button class="menu-item active" data-panel="memorable" data-i18n="settingsMemorableWords">易记单词</button>
+                <button class="menu-item" data-panel="about" data-i18n="settingsAbout">产品信息</button>
+            </nav>
+        </aside>
+
+        <!-- 右侧：设置内容区域 -->
+        <main class="settings-content">
+            <!-- 易记单词设置面板 -->
+            <section class="content-panel active" id="panelMemorable">
+                <!-- 顶部操作栏 -->
+                <div class="panel-toolbar">
+                    <div class="toolbar-left">
+                        <!-- 编辑按钮（图标+文字） -->
+                        <button id="editWordBtn" class="btn btn-edit">
+                            <svg class="btn-icon icon-edit" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                            </svg>
+                            <svg class="btn-icon icon-done" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span class="btn-label" data-i18n="settingsEdit">编辑</span>
+                        </button>
+                        <!-- 编辑模式操作提示 -->
+                        <span class="edit-hint" id="editHint" data-i18n="settingsEditHint">编辑完成后保存生效</span>
+                    </div>
+                    <!-- 添加单词输入组（编辑状态下显示） -->
+                    <div class="word-input-group" id="wordInputGroup" style="display: none;">
+                        <input type="text" id="wordInput" class="word-input" 
+                               data-i18n-placeholder="settingsWordInputPlaceholder"
+                               placeholder="输入单词，回车键添加" maxlength="6" autocomplete="off">
+                        <button id="addWordBtn" class="btn btn-primary" data-i18n="settingsAddWord">添加</button>
+                    </div>
+                </div>
+
+                <!-- 单词列表展示区 -->
+                <div class="word-list-container">
+                    <div id="wordList" class="word-grid"></div>
+                    <div id="emptyHint" class="empty-hint" data-i18n="settingsNoWords">暂无单词</div>
+                </div>
+
+                <!-- 操作提示 -->
+                <div id="wordMessage" class="message-toast"></div>
+            </section>
+
+            <!-- 产品信息面板 -->
+            <section class="content-panel" id="panelAbout">
+                <div class="about-info">
+                    <div class="info-row">
+                        <span class="info-label" data-i18n="settingsProductName">产品名称</span>
+                        <span class="info-value" id="aboutProductName"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label" data-i18n="settingsVersion">产品版本</span>
+                        <span class="info-value" id="aboutVersion"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label" data-i18n="settingsFeedback">意见反馈</span>
+                        <span class="info-value info-link" id="aboutFeedback">-</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

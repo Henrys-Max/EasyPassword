@@ -22,7 +22,7 @@
     <meta charset="UTF-8">
     <!-- 视口设置：适配不同分辨率屏幕，禁止缩放保证 popup 固定尺寸 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasyPassword - 密码生成器</title>
+    <title>EasyPassword</title>
     <!-- 主样式表：纯原生 CSS 实现，不依赖 Bootstrap 等第三方 UI 库 -->
     <link rel="stylesheet" href="popup.css">
     <!--
@@ -56,17 +56,17 @@
           底部有 1px 分割线，padding/margin 均为 5px。
         -->
         <header class="header">
-            <!-- 应用名称：16px、加粗、颜色跟随文本主题色 -->
-            <h1 class="header-title">EasyPassword</h1>
-            <!--
-              设置按钮（暂时注释，未来可启用）
-              样式见 .header-settings-btn，图标为 assets/icons/settings.svg
-            -->
-            <!--
-            <button class="header-settings-btn" title="设置">
-                <img src="../assets/icons/settings.svg" alt="设置">
+            <!-- 左侧：应用名称 + 版本号 -->
+            <div class="header-left">
+                <!-- 应用名称：16px、加粗、颜色跟随文本主题色 -->
+                <h1 class="header-title">EasyPassword</h1>
+                <!-- 版本号：由 popup.js 从 chrome.runtime.getManifest().version 动态填充 -->
+                <span class="header-version" id="headerVersion"></span>
+            </div>
+            <!-- 设置按钮：点击跳转到设置页面 -->
+            <button class="header-settings-btn" id="settingsButton" data-i18n-title="settingsButtonTitle">
+                <img src="../assets/icons/settings.svg" data-i18n-alt="settingsButtonAlt">
             </button>
-            -->
         </header>
 
         <!--
@@ -144,7 +144,7 @@
                   - 点击时有 360° 旋转动画（CSS 类 .refresh-icon.rotate）
                 -->
                 <button id="refreshButton" class="icon-button" data-i18n-title="refreshTooltip">
-                    <img src="../assets/icons/Renew.svg" alt="刷新" class="refresh-icon">
+                    <img src="../assets/icons/Renew.svg" data-i18n-alt="refreshButtonAlt" class="refresh-icon">
                 </button>
                 <!--
                   复制按钮 #copyButton

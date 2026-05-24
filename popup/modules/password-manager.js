@@ -15,10 +15,11 @@ let isInitialized = false;
 export const initializePasswordManager = () => {
     if (isInitialized) return;
     
-    console.log('初始化密码管理模块...');
+    console.log('Initializing password manager...');
     
     // 注册密码生成成功回调
     passwordService.onPasswordGenerated((password, strengthResult) => {
+        window.__passwordValid = true;
         const { passwordOutput } = getDOMElements();
         if (passwordOutput) {
             passwordOutput.value = password;
@@ -29,10 +30,11 @@ export const initializePasswordManager = () => {
     
     // 注册密码生成错误回调
     passwordService.onPasswordError((message) => {
+        window.__passwordValid = false;
         const { passwordOutput } = getDOMElements();
         if (passwordOutput) {
-            passwordOutput.value = '生成失败: ' + message;
-            showSecurityWarning(true, `密码生成失败: ${message}`);
+            passwordOutput.value = window.t('generationFailed', message);
+            showSecurityWarning(true, window.t('generationFailed', message));
         }
     });
     
@@ -42,24 +44,26 @@ export const initializePasswordManager = () => {
     });
     
     isInitialized = true;
-    console.log('密码管理模块初始化完成');
+    console.log('Password manager initialized');
 };
 
 /**
  * 生成密码
  */
 export const generatePassword = () => {
-    console.log('开始生成密码...');
+    console.log('Starting password generation...');
     const { passwordOutput, passwordType, passwordLength, includeNumbers, includeSymbols } = getDOMElements();
 
     // 验证必需的DOM元素是否存在
     if (!passwordOutput) {
-        console.error('密码输出元素未找到');
+        console.error('Password output element not found');
         return;
     }
 
     // 显示正在生成状态
-    passwordOutput.value = `正在生成${passwordType?.value === 'memorable' ? '易记' : '随机'}密码...`;
+    window.__passwordValid = false;
+    const passwordTypeLabel = passwordType?.value === 'memorable' ? 'generatingMemorable' : 'generatingRandom';
+    passwordOutput.value = window.t('generatingPassword', window.t(passwordTypeLabel));
 
     try {
         // 获取参数，使用默认值防止错误
@@ -72,7 +76,7 @@ export const generatePassword = () => {
         const safeLength = (isNaN(length) || length < 8 || length > 26) ? 12 : length;
 
         // 记录生成参数
-        console.log('密码生成参数:', {
+        console.log('Password generation params:', {
             type,
             length: safeLength,
             useNumbers,
@@ -101,9 +105,9 @@ export const generatePassword = () => {
         }
 
     } catch (error) {
-        console.error('密码生成过程出错:', error);
-        passwordOutput.value = '生成失败，请重试...';
-        showSecurityWarning(true, '密码生成失败，请重试');
+        console.error('Password generation error:', error);
+        passwordOutput.value = window.t('generationRetry');
+        showSecurityWarning(true, window.t('generationRetry'));
     }
 };
 
@@ -115,7 +119,7 @@ export const updatePasswordStrengthUI = (strengthResult) => {
     const { strengthBar, strengthLabel } = getDOMElements();
     
     if (!strengthBar || !strengthLabel) {
-        console.error('强度指示器元素未找到');
+        console.error('Strength indicator element not found');
         return;
     }
     

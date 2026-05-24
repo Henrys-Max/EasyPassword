@@ -18,12 +18,45 @@ import passwordService from '../lib/core/password/passwordService.js';
 // 全局变量
 let isInitialized = false;
 
+/**
+ * 从 manifest.json 读取版本号并显示在 header 中
+ */
+function displayAppVersion() {
+    const manifest = chrome.runtime.getManifest();
+    const versionEl = document.getElementById('headerVersion');
+    if (versionEl && manifest.version) {
+        versionEl.textContent = 'v' + manifest.version;
+    }
+}
+
+/**
+ * 绑定设置按钮点击事件，打开设置页面
+ */
+function bindSettingsButton() {
+    const settingsButton = document.getElementById('settingsButton');
+    if (settingsButton) {
+        settingsButton.addEventListener('click', () => {
+            chrome.tabs.create({ url: chrome.runtime.getURL('popup/settings.html') });
+        });
+    }
+}
+
 // 初始化应用
 async function initializeApp() {
+    // 设置页面标题
+    document.title = window.t('popupTitle');
+
+    // 显示版本号
+    displayAppVersion();
+
+    // 绑定设置按钮
+    bindSettingsButton();
+
     // 立即显示初始状态，提高用户体验
+    window.__passwordValid = false;
     const passwordOutput = document.getElementById('passwordOutput');
     if (passwordOutput) {
-        passwordOutput.value = '正在初始化...';
+        passwordOutput.value = window.t('initializing');
     }
 
     try {
@@ -52,9 +85,9 @@ async function initializeApp() {
         }, 100);
 
     } catch (error) {
-        console.error('初始化失败:', error);
+        console.error('Initialization failed:', error);
         if (passwordOutput) {
-            passwordOutput.value = '初始化失败：' + error.message;
+            passwordOutput.value = window.t('initFailed', error.message);
             // 尝试恢复基本功能
             setTimeout(() => {
                 try {
@@ -64,7 +97,7 @@ async function initializeApp() {
                     
                     if (copyButton) {
                         copyButton.addEventListener('click', () => {
-                            alert('复制功能暂时不可用，请稍后再试');
+                            alert(window.t('copyUnavailable'));
                         });
                     }
                     
@@ -74,7 +107,7 @@ async function initializeApp() {
                         });
                     }
                 } catch (e) {
-                    console.error('恢复基本功能失败:', e);
+                    console.error('Recovery failed:', e);
                 }
             }, 1000);
         }
@@ -88,17 +121,19 @@ async function initializeApp() {
 function setupGlobalErrorHandling() {
     // 监听全局未捕获的错误
     window.addEventListener('error', (event) => {
-        console.error('全局错误:', event.error);
+        console.error('Global error:', event.error);
         
         const passwordOutput = document.getElementById('passwordOutput');
         if (passwordOutput && !isInitialized) {
-            passwordOutput.value = '出现错误：' + (event.error?.message || '未知错误');
+            const errorMsg = event.error?.message || window.t('unknownError');
+            passwordOutput.value = window.t('errorOccurred', errorMsg);
         }
         
         // 显示错误通知
         const securityWarning = document.getElementById('securityWarning');
         if (securityWarning) {
-            securityWarning.textContent = '发生错误: ' + (event.error?.message || '未知错误');
+            const errorMsg = event.error?.message || window.t('unknownError');
+            securityWarning.textContent = window.t('errorOccurred', errorMsg);
             securityWarning.classList.add('show');
             setTimeout(() => {
                 securityWarning.classList.remove('show');
@@ -108,7 +143,7 @@ function setupGlobalErrorHandling() {
     
     // 密码服务错误监听
     passwordService.onPasswordError((message) => {
-        console.error('密码服务错误:', message);
+        console.error('Password service error:', message);
         // 全局错误处理已经在password-manager.js中实现
     });
 }

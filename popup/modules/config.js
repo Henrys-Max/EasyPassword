@@ -59,13 +59,13 @@ export const saveConfig = () => {
         // 使用Chrome存储API保存配置
         chrome.storage.sync.set({ passwordConfig: config }, () => {
             if (chrome.runtime.lastError) {
-                console.error('保存配置失败:', chrome.runtime.lastError.message);
+                console.error('Failed to save config:', chrome.runtime.lastError.message);
                 return;
             }
-            console.log('配置已保存', config);
+            console.log('Config saved:', config);
         });
     } catch (error) {
-        console.error('保存配置失败:', error);
+        console.error('Failed to save config:', error);
     }
 };
 
@@ -74,17 +74,17 @@ export const loadSavedConfig = () => {
     try {
         chrome.storage.sync.get('passwordConfig', (data) => {
             if (chrome.runtime.lastError) {
-                console.error('读取配置失败:', chrome.runtime.lastError.message);
+                console.error('Failed to read config:', chrome.runtime.lastError.message);
                 applyConfig(DEFAULT_CONFIG);
                 return;
             }
             const savedConfig = data.passwordConfig || DEFAULT_CONFIG;
-            console.log('加载已保存的配置', savedConfig);
+            console.log('Loaded saved config:', savedConfig);
             
             applyConfig(savedConfig);
         });
     } catch (error) {
-        console.error('加载配置失败:', error);
+        console.error('Failed to load config:', error);
         // 使用默认配置
         applyConfig(DEFAULT_CONFIG);
     }
@@ -157,6 +157,6 @@ const applyConfig = (config) => {
         // 生成初始密码
         generatePassword();
     } catch (error) {
-        console.error('应用配置失败:', error);
+        console.error('Failed to apply config:', error);
     }
 };

@@ -15,6 +15,22 @@ EasyPassword是一款专注于密码安全的浏览器扩展。它采用Web Cryp
 ### 3. 易记密码单词用户自定义
 
 ## 版本历史
+### V1.1.6
+- 国际化 (i18n) 全面覆盖
+  - 消除 popup 核心流程所有硬编码中文字符串，全部改用 i18n 翻译键
+  - 覆盖 popup.js、password-manager.js、ui.js、init.js、config.js、settings.js 共 6 个 JS 模块
+  - 新增 `window.t()` 全局快捷方法，支持带参数翻译 `t('key', arg0, arg1)`
+  - 新增 `data-i18n-alt` 属性支持，自动翻译 img alt 文本
+  - 新增 4 个翻译键：`popupTitle`、`settingsButtonTitle`、`settingsButtonAlt`、`refreshButtonAlt`
+- UI 状态判断逻辑修复
+  - 修复 ui.js 中用中文字符串匹配判断复制状态的关键缺陷
+  - 改用 `window.__passwordValid` 布尔标志替代字符串匹配，彻底消除语言切换导致的误判
+- 弹出窗口 title 动态设置
+  - popup 和 settings 页面的 `<title>` 改为由 JS 运行时调用 i18n 动态赋值
+- 代码规范化
+  - 所有 console 日志消息统一改为英文（开发者面向）
+  - HTML 静态 hardcoded 属性（title/alt）全部替换为 `data-i18n-*` 属性
+
 ### V1.1.5
 - UI 主题升级
   - 品牌色从蓝色系全面切换为绿色系 (#038f5d / #05b872)
