@@ -520,7 +520,7 @@ body {
 
 /* ---- 自定义下拉选择框 ---- */
 .custom-select {
-    width: 40%;
+    width: 25%;
     height: 30px;
     font-size: 13px;
     border: 1px solid var(--input-border);

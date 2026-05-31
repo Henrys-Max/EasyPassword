@@ -370,6 +370,7 @@ body {
 .info-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 12px 0;
     border-bottom: 1px solid var(--border-color);
 }
@@ -391,8 +392,13 @@ body {
 }
 
 .info-link {
-    color: var(--text-color-muted);
-    font-style: italic;
+    color: var(--brand-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.info-link:hover {
+    text-decoration: underline;
 }
 
 /* ---- 响应式 ---- */
